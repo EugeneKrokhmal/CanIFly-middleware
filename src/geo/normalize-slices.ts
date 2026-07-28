@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import type {
   UasZoneFeature,
   UasZoneGeometry,
@@ -6,6 +5,10 @@ import type {
   ZoneSource,
 } from "./ed318-types.js";
 import { toMeters } from "./ed318-types.js";
+
+function newId(): string {
+  return globalThis.crypto.randomUUID();
+}
 
 function ensureMultiPolygon(
   geom: GeoJSON.Polygon | GeoJSON.MultiPolygon,
@@ -94,7 +97,7 @@ export function zoneFeatureToSlices(
     const normalized = normalizeGeometrySlice(g);
     if (!normalized) continue;
     slices.push({
-      id: randomUUID(),
+      id: newId(),
       zoneIdentifier: feature.identifier,
       name: feature.name,
       source,
