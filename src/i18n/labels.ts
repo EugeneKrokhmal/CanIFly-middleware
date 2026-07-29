@@ -1,11 +1,33 @@
 export type Locale = "es" | "en";
 
+export type PinKind = "obstacle" | "fly_spot";
+
 export type ObstacleType =
   | "construction"
   | "crane"
   | "electric_line"
   | "air_sports"
+  | "park"
+  | "rooftop"
+  | "field"
+  | "beach"
   | "other";
+
+export const OBSTACLE_TYPES = [
+  "construction",
+  "crane",
+  "electric_line",
+  "air_sports",
+  "other",
+] as const satisfies readonly ObstacleType[];
+
+export const FLY_SPOT_TYPES = [
+  "park",
+  "rooftop",
+  "field",
+  "beach",
+  "other",
+] as const satisfies readonly ObstacleType[];
 
 export type AirspaceStatusLabel =
   | "clear"
@@ -19,6 +41,10 @@ const OBSTACLE_LABELS: Record<Locale, Record<ObstacleType, string>> = {
     crane: "Crane",
     electric_line: "Electric lines",
     air_sports: "Air sports nearby",
+    park: "Park",
+    rooftop: "Rooftop",
+    field: "Field / open area",
+    beach: "Beach",
     other: "Other",
   },
   es: {
@@ -26,7 +52,22 @@ const OBSTACLE_LABELS: Record<Locale, Record<ObstacleType, string>> = {
     crane: "Grúa",
     electric_line: "Líneas eléctricas",
     air_sports: "Deportes aéreos cerca",
+    park: "Parque",
+    rooftop: "Azotea",
+    field: "Campo / zona abierta",
+    beach: "Playa",
     other: "Otro",
+  },
+};
+
+const PIN_KIND_LABELS: Record<Locale, Record<PinKind, string>> = {
+  en: {
+    obstacle: "Obstacle",
+    fly_spot: "Fly spot",
+  },
+  es: {
+    obstacle: "Obstáculo",
+    fly_spot: "Zona de vuelo",
   },
 };
 
@@ -56,10 +97,30 @@ export function parseLocale(header: string | null | undefined): Locale {
 }
 
 export function obstacleLabel(
-  type: ObstacleType,
+  type: ObstacleType | string,
   locale: Locale = "es",
 ): string {
-  return OBSTACLE_LABELS[locale][type] ?? OBSTACLE_LABELS.en[type];
+  const labels = OBSTACLE_LABELS[locale] ?? OBSTACLE_LABELS.en;
+  return (
+    labels[type as ObstacleType] ??
+    OBSTACLE_LABELS.en[type as ObstacleType] ??
+    String(type)
+  );
+}
+
+export function pinKindLabel(kind: PinKind, locale: Locale = "es"): string {
+  return PIN_KIND_LABELS[locale][kind] ?? PIN_KIND_LABELS.en[kind];
+}
+
+export function typesForPinKind(kind: PinKind): readonly ObstacleType[] {
+  return kind === "fly_spot" ? FLY_SPOT_TYPES : OBSTACLE_TYPES;
+}
+
+export function isTypeAllowedForKind(
+  kind: PinKind,
+  type: ObstacleType,
+): boolean {
+  return (typesForPinKind(kind) as readonly string[]).includes(type);
 }
 
 export function statusLabel(
