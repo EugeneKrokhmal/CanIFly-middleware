@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { OPEN_CATEGORY_CEILING_AGL_M } from "../constants.js";
 export const weightClassSchema = z.enum(["c0", "c1", "c2"]);
+export const appLocaleSchema = z.enum(["es", "en"]);
 export const authCredentialsSchema = z.object({
     email: z.string().trim().email().max(254),
     password: z.string().min(6).max(128),
@@ -14,12 +15,16 @@ export const authRegisterSchema = authCredentialsSchema.extend({
         .optional()
         .nullable()
         .transform((v) => (v && v.length > 0 ? v : null)),
+    locale: appLocaleSchema.optional().default("es"),
 });
 export const authEmailSchema = z.object({
     email: z.string().trim().email().max(254),
 });
 export const authVerifyTokenSchema = z.object({
     token: z.string().trim().min(16).max(128),
+});
+export const updateLocaleSchema = z.object({
+    locale: appLocaleSchema,
 });
 export const updateAccountSchema = z.object({
     name: z.string().trim().min(2).max(80),

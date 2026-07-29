@@ -4,6 +4,10 @@ export declare const weightClassSchema: z.ZodEnum<{
     c1: "c1";
     c2: "c2";
 }>;
+export declare const appLocaleSchema: z.ZodEnum<{
+    es: "es";
+    en: "en";
+}>;
 export declare const authCredentialsSchema: z.ZodObject<{
     email: z.ZodString;
     password: z.ZodString;
@@ -13,12 +17,22 @@ export declare const authRegisterSchema: z.ZodObject<{
     password: z.ZodString;
     name: z.ZodString;
     operatorNumber: z.ZodPipe<z.ZodNullable<z.ZodOptional<z.ZodString>>, z.ZodTransform<string | null, string | null | undefined>>;
+    locale: z.ZodDefault<z.ZodOptional<z.ZodEnum<{
+        es: "es";
+        en: "en";
+    }>>>;
 }, z.core.$strip>;
 export declare const authEmailSchema: z.ZodObject<{
     email: z.ZodString;
 }, z.core.$strip>;
 export declare const authVerifyTokenSchema: z.ZodObject<{
     token: z.ZodString;
+}, z.core.$strip>;
+export declare const updateLocaleSchema: z.ZodObject<{
+    locale: z.ZodEnum<{
+        es: "es";
+        en: "en";
+    }>;
 }, z.core.$strip>;
 export declare const updateAccountSchema: z.ZodObject<{
     name: z.ZodString;
