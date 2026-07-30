@@ -30,6 +30,11 @@ export const authVerifyTokenSchema = z.object({
   token: z.string().trim().min(16).max(128),
 });
 
+export const authResetPasswordSchema = z.object({
+  token: z.string().trim().min(16).max(128),
+  password: z.string().min(6).max(128),
+});
+
 export const updateLocaleSchema = z.object({
   locale: appLocaleSchema,
 });

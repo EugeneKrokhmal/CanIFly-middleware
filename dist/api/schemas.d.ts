@@ -30,6 +30,10 @@ export declare const authEmailSchema: z.ZodObject<{
 export declare const authVerifyTokenSchema: z.ZodObject<{
     token: z.ZodString;
 }, z.core.$strip>;
+export declare const authResetPasswordSchema: z.ZodObject<{
+    token: z.ZodString;
+    password: z.ZodString;
+}, z.core.$strip>;
 export declare const updateLocaleSchema: z.ZodObject<{
     locale: z.ZodEnum<{
         es: "es";
