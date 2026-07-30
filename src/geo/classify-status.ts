@@ -56,6 +56,16 @@ function isSwitzerlandZone(zone: MatchedZone): boolean {
   );
 }
 
+function isPortugalZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "PT" || c === "PRT" || zone.source === "anac";
+}
+
+function isAustriaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "AT" || c === "AUT" || zone.source === "austro";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -159,6 +169,33 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
       blob.includes("CTR ") ||
       /^CTR\d/.test(blob) ||
       /\bLS[A-Z]{2}\b/.test(blob)
+    );
+  }
+  if (isPortugalZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    if (
+      reasons.some(
+        (r) =>
+          r === "AIR_TRAFFIC" ||
+          r === "EMERGENCY" ||
+          r.includes("MILITARY") ||
+          r.includes("SECURITY"),
+      )
+    ) {
+      return true;
+    }
+    const msg = (zone.message ?? "").toUpperCase();
+    return msg.includes("PROIBID") || msg.includes("PROHIBIT");
+  }
+  if (isAustriaZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    return reasons.some(
+      (r) =>
+        r === "AIR_TRAFFIC" ||
+        r.includes("MILITARY") ||
+        r.includes("MILITAER"),
     );
   }
   return false;

@@ -98,6 +98,46 @@ export const FRANCE_COUNTRY = {
         authorityName: "DGAC / Géoportail",
     },
 };
+/** Portugal mainland + Madeira + Azores envelope (ANAC ED-269). */
+export const PORTUGAL_COUNTRY = {
+    id: "PT",
+    iso2: "PT",
+    iso3: "PRT",
+    nameEn: "Portugal",
+    nameLocal: "Portugal",
+    center: [-8.0, 39.5],
+    bounds: {
+        minLat: 32.2,
+        maxLat: 42.2,
+        minLng: -31.5,
+        maxLng: -6.1,
+    },
+    official: {
+        mapUrl: "https://dnt.anac.pt/mapa.html",
+        authorityUrl: "https://dnt.anac.pt/json/",
+        authorityName: "ANAC",
+    },
+};
+/** Austria (Austro Control Dronespace ED-269). */
+export const AUSTRIA_COUNTRY = {
+    id: "AT",
+    iso2: "AT",
+    iso3: "AUT",
+    nameEn: "Austria",
+    nameLocal: "Österreich",
+    center: [14.55, 47.52],
+    bounds: {
+        minLat: 46.35,
+        maxLat: 49.05,
+        minLng: 9.45,
+        maxLng: 17.2,
+    },
+    official: {
+        mapUrl: "https://dronespace.at/",
+        authorityUrl: "https://www.austrocontrol.at/luftfahrtbehoerde/lizenzen__bewilligungen/drohnen/geografische_zonen",
+        authorityName: "Austro Control",
+    },
+};
 /** Mainland Czechia (approx). */
 export const CZECHIA_COUNTRY = {
     id: "CZ",
@@ -144,14 +184,26 @@ export const COUNTRIES = {
     FR: FRANCE_COUNTRY,
     DK: DENMARK_COUNTRY,
     CH: SWITZERLAND_COUNTRY,
+    PT: PORTUGAL_COUNTRY,
+    AT: AUSTRIA_COUNTRY,
     CZ: CZECHIA_COUNTRY,
     PL: POLAND_COUNTRY,
 };
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
- * among AABB hits so DE/CZ/PL/FR/DK/CH border overlaps pick the right country.
+ * among AABB hits so border overlaps pick the right country.
  */
-export const COUNTRY_IDS = ["ES", "DE", "FR", "DK", "CH", "CZ", "PL"];
+export const COUNTRY_IDS = [
+    "ES",
+    "DE",
+    "FR",
+    "DK",
+    "CH",
+    "PT",
+    "AT",
+    "CZ",
+    "PL",
+];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&
         lat <= bounds.maxLat &&
@@ -192,6 +244,39 @@ export function resolveCountry(lat, lng) {
             return "FR";
         if (lat <= 47.72 && lng <= 9.0)
             return "CH";
+    }
+    // AT before DE/CZ centre-distance — Innsbruck / Vienna AABB overlaps.
+    if (hits.includes("AT") && hits.includes("DE")) {
+        if (lat <= 47.55)
+            return "AT";
+        if (lat >= 48.3)
+            return "DE";
+        return lng >= 12.8 ? "AT" : "DE";
+    }
+    if (hits.includes("AT") && hits.includes("CH")) {
+        // Vorarlberg east of ~9.7°; Swiss Rhine valley west.
+        if (lng >= 9.7)
+            return "AT";
+        return "CH";
+    }
+    if (hits.includes("AT") && hits.includes("CZ")) {
+        if (lat >= 48.75)
+            return "CZ";
+        return "AT";
+    }
+    if (hits.includes("ES") && hits.includes("PT")) {
+        // Madeira / Porto Santo
+        if (lat >= 32.2 && lat <= 33.3 && lng >= -17.5 && lng <= -16.0)
+            return "PT";
+        // Azores
+        if (lat >= 36.8 && lat <= 39.9 && lng <= -24.0)
+            return "PT";
+        // Galicia (ES) north of Minho; western Iberia → PT
+        if (lat >= 42.0)
+            return "ES";
+        if (lng <= -6.9)
+            return "PT";
+        return "ES";
     }
     if (hits.includes("DE") && hits.includes("FR")) {
         // West of the Rhine → France, except the Saarland wedge (DE west of Rhine).

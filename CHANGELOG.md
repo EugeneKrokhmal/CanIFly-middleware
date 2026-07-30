@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entries `PT` (Portugal / ANAC) and `AT` (Austria / Austro Control) with ES↔PT and AT↔DE/CH/CZ border heuristics
+- `ZoneSource` values `"anac"` / `"austro"`; hard no-fly for Portuguese PROHIBITED/emergency and Austrian AIR_TRAFFIC zones
 - Country registry entry `CH` (Switzerland / FOCA) with CH↔DE / CH↔FR border heuristics
 - `ZoneSource` value `"foca"`; hard no-fly for AIR_TRAFFIC / aerodrome Swiss zones
 - Country registry entry `DK` (Denmark / Dronezoner) with DE↔DK Flensburg border heuristics

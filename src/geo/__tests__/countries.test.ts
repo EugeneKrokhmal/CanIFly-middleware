@@ -10,6 +10,10 @@ describe("resolveCountry", () => {
     ["Zurich", 47.3769, 8.5417, "CH"],
     ["Geneva", 46.2044, 6.1432, "CH"],
     ["Bern", 46.948, 7.4474, "CH"],
+    ["Lisbon", 38.7223, -9.1393, "PT"],
+    ["Porto", 41.1579, -8.6291, "PT"],
+    ["Vienna", 48.2082, 16.3738, "AT"],
+    ["Innsbruck", 47.2692, 11.4041, "AT"],
     ["Prague", 50.0755, 14.4378, "CZ"],
     ["Warsaw", 52.2297, 21.0122, "PL"],
   ] as const)("%s → %s", (_name, lat, lng, want) => {
@@ -53,6 +57,15 @@ describe("resolveCountry", () => {
     expect(resolveCountry(47.3769, 8.5417)).toBe("CH"); // Zürich (DE AABB overlap)
     expect(resolveCountry(46.2044, 6.1432)).toBe("CH"); // Genève
     expect(resolveCountry(47.376, 7.35)).toBe("CH"); // Delémont area
+  });
+
+  it("ES↔PT / AT borders", () => {
+    expect(resolveCountry(38.7223, -9.1393)).toBe("PT"); // Lisbon
+    expect(resolveCountry(40.4168, -3.7038)).toBe("ES"); // Madrid
+    expect(resolveCountry(42.2406, -8.7207)).toBe("ES"); // Vigo
+    expect(resolveCountry(48.2082, 16.3738)).toBe("AT"); // Vienna
+    expect(resolveCountry(48.1351, 11.582)).toBe("DE"); // Munich
+    expect(resolveCountry(47.2692, 11.4041)).toBe("AT"); // Innsbruck
   });
 
   it("outside coverage → null", () => {
