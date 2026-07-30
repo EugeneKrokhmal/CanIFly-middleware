@@ -46,6 +46,17 @@ const OBSTACLE_LABELS = {
         beach: "Strand",
         other: "Sonstiges",
     },
+    fr: {
+        construction: "Chantier / bâtiment",
+        crane: "Grue",
+        electric_line: "Lignes électriques",
+        air_sports: "Sports aériens à proximité",
+        park: "Parc",
+        rooftop: "Toit",
+        field: "Champ / zone ouverte",
+        beach: "Plage",
+        other: "Autre",
+    },
     pl: {
         construction: "Budowa / budynek",
         crane: "Dźwig",
@@ -82,6 +93,10 @@ const PIN_KIND_LABELS = {
         obstacle: "Hindernis",
         fly_spot: "Flugort",
     },
+    fr: {
+        obstacle: "Obstacle",
+        fly_spot: "Spot de vol",
+    },
     pl: {
         obstacle: "Przeszkoda",
         fly_spot: "Miejsce do lotu",
@@ -110,6 +125,12 @@ const STATUS_LABELS = {
         restricted: "Eingeschränkt",
         prohibited: "Verboten",
     },
+    fr: {
+        clear: "Libre",
+        limited: "Limité",
+        restricted: "Restreint",
+        prohibited: "Interdit",
+    },
     pl: {
         clear: "Wolna",
         limited: "Ograniczona",
@@ -135,6 +156,8 @@ export function parseLocale(header) {
         return "pl";
     if (lower.startsWith("de") || lower.includes("de-") || lower.includes("de,"))
         return "de";
+    if (lower.startsWith("fr") || lower.includes("fr-") || lower.includes("fr,"))
+        return "fr";
     if (lower.includes("en") && !lower.startsWith("es"))
         return "en";
     return "es";

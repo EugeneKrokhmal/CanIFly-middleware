@@ -8,6 +8,7 @@ export declare const appLocaleSchema: z.ZodEnum<{
     es: "es";
     en: "en";
     de: "de";
+    fr: "fr";
     pl: "pl";
     cs: "cs";
 }>;
@@ -24,6 +25,7 @@ export declare const authRegisterSchema: z.ZodObject<{
         es: "es";
         en: "en";
         de: "de";
+        fr: "fr";
         pl: "pl";
         cs: "cs";
     }>>>;
@@ -43,6 +45,7 @@ export declare const updateLocaleSchema: z.ZodObject<{
         es: "es";
         en: "en";
         de: "de";
+        fr: "fr";
         pl: "pl";
         cs: "cs";
     }>;
