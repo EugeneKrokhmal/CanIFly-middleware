@@ -1,5 +1,8 @@
-import { SPAIN_COUNTRY } from "./geo/countries.js";
+import { COUNTRIES, GERMANY_COUNTRY, SPAIN_COUNTRY } from "./geo/countries.js";
 export const SPAIN_CENTER = SPAIN_COUNTRY.center;
+export const GERMANY_CENTER = GERMANY_COUNTRY.center;
+export const CZECHIA_CENTER = COUNTRIES.CZ.center;
+export const POLAND_CENTER = COUNTRIES.PL.center;
 export const DEFAULT_ZOOM = 6;
 export const DEFAULT_DRONE_PROFILE = {
     weightClass: "c0",

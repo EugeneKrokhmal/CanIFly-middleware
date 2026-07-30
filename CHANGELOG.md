@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Country registry entry `DE` (Germany / dipul) with DE↔CZ / DE↔PL border heuristics
+- Hard no-fly heuristics for German aerodromes (FLUGHAFEN / FLUGPLATZ / ED-R) and Czech inner AD zones (LKR314B/D/F)
+
+### Changed
+- `zoneVisualStatus` / military detection recognise German `MILITAER` and Czech `VOJENSK` reasons
+
 ## [0.3.0] — 2026-07-30
 
 ### Added

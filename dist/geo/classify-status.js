@@ -15,6 +15,14 @@ function isSpainZone(zone) {
         zone.source === "infra" ||
         zone.source === "servais");
 }
+function isGermanyZone(zone) {
+    const c = (zone.country ?? "").toUpperCase();
+    return c === "DE" || c === "DEU" || zone.source === "dipul";
+}
+function isCzechiaZone(zone) {
+    const c = (zone.country ?? "").toUpperCase();
+    return c === "CZ" || c === "CZE" || zone.source === "anscr";
+}
 function restrictionRank(restriction) {
     const r = String(restriction).toUpperCase();
     if (r === "PROHIBITED")
@@ -37,16 +45,52 @@ function cleanName(zone) {
         .replace(/\s+/g, " ")
         .trim();
 }
-/** Surface aerodrome / hospital ban — no flight without coordination (Spain). */
+/** Surface aerodrome / hospital ban — no flight without coordination. */
 export function isHardNoFlyZone(zone) {
-    if (!isSpainZone(zone))
+    if (isSpainZone(zone)) {
+        const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
+        const msg = (zone.message ?? "").toUpperCase();
+        if (/^[A-Z]{4}0$/.test(id))
+            return true;
+        if (msg.includes("NO PERMITIDO EL VUELO"))
+            return true;
         return false;
-    const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
-    const msg = (zone.message ?? "").toUpperCase();
-    if (/^[A-Z]{4}0$/.test(id))
-        return true;
-    if (msg.includes("NO PERMITIDO EL VUELO"))
-        return true;
+    }
+    if (isGermanyZone(zone)) {
+        const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+        if (reasons.some((r) => r === "FLUGHAFEN" ||
+            r === "FLUGPLATZ" ||
+            r.includes("FLUGBESCHRAENK") ||
+            r.includes("MILITAER"))) {
+            return true;
+        }
+        const msg = (zone.message ?? "").toUpperCase();
+        // § 21h Abs. 3 Nr. 1 (airfield) / Nr. 2 (airport)
+        if (/ABS\.\s*3\s*\([12]\.?\)/.test(msg))
+            return true;
+        if (msg.includes("§ 17"))
+            return true;
+        return false;
+    }
+    if (isCzechiaZone(zone)) {
+        const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+        const name = `${zone.name} ${zone.identifier}`.toUpperCase();
+        if (reasons.some((r) => r.includes("AD_PERIMETER") ||
+            r.includes("INNER_AD") ||
+            /\bLKR314[BDF]\b/.test(r) ||
+            /\bLKP\d/.test(r) ||
+            r === "MILITARY" ||
+            r.includes("VOJENSK"))) {
+            return true;
+        }
+        if (name.includes("VNITŘNÍ ZÓNA") ||
+            name.includes("VNITRNI ZONA") ||
+            name.includes("ZAKÁZ") ||
+            /\bLKR314[BDF]\b/.test(name)) {
+            return true;
+        }
+        return false;
+    }
     return false;
 }
 export function isNationalPopulationAdvisory(zone) {
@@ -98,7 +142,12 @@ function zoneReasons(zone) {
     return [];
 }
 function isMilitary(zone) {
-    return zoneReasons(zone).some((r) => r.toUpperCase().includes("MILITARY"));
+    return zoneReasons(zone).some((r) => {
+        const u = r.toUpperCase();
+        return (u.includes("MILITARY") ||
+            u.includes("MILITAER") ||
+            u.includes("VOJENSK"));
+    });
 }
 /** Map/sidebar visual severity for a single zone polygon. */
 export function zoneVisualStatus(zone) {

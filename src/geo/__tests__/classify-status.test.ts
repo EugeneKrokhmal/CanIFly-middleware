@@ -104,6 +104,54 @@ describe("classifyStatus", () => {
     expect(result.summary).toMatch(/~45m/i);
   });
 
+  it("treats Czech inner CTR/airport zones as prohibited (LKR314D)", () => {
+    const result = classifyStatus([
+      zone({
+        identifier: "5LKR314D",
+        name: "Omezený prostor (LKR314D – CTR LKPR)",
+        restriction: "REQ_AUTHORISATION",
+        reason: ["AD_perimeter", "inner_AD_zone", "LKR314D"],
+        source: "anscr",
+        country: "CZ",
+      }),
+      zone({
+        identifier: "9511",
+        name: "Grid CTR 10983",
+        restriction: "CONDITIONAL",
+        reason: ["Grid CTR"],
+        source: "anscr",
+        country: "CZ",
+      }),
+    ]);
+    expect(result.status).toBe("prohibited");
+    expect(result.zones[0].identifier).toBe("5LKR314D");
+  });
+
+  it("treats German airports as prohibited (LuftVO § 21h Abs. 3 Nr. 2)", () => {
+    const result = classifyStatus([
+      zone({
+        identifier: "uQiEZKA",
+        name: "BERLIN BRANDENBURG",
+        restriction: "REQ_AUTHORISATION",
+        reason: ["FLUGHAFEN", "§ 21h, Abs. 3 (2.) LuftVO"],
+        source: "dipul",
+        country: "DE",
+        message: "§ 21h, Abs. 3 (2.) LuftVO",
+      }),
+      zone({
+        identifier: "14264",
+        name: "BERLIN (CTR)",
+        restriction: "REQ_AUTHORISATION",
+        reason: ["KONTROLLZONE", "§ 21h, Abs. 3 (9.) LuftVO"],
+        source: "dipul",
+        country: "DE",
+        message: "§ 21h, Abs. 3 (9.) LuftVO",
+      }),
+    ]);
+    expect(result.status).toBe("prohibited");
+    expect(result.zones[0].identifier).toBe("uQiEZKA");
+  });
+
   it("prefers aerodrome ops zone in prohibited summary", () => {
     const result = classifyStatus([
       zone({

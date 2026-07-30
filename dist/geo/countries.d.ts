@@ -1,5 +1,5 @@
 import type { Bbox } from "./bbox.js";
-export type CountryId = "ES" | "CZ" | "PL";
+export type CountryId = "ES" | "DE" | "CZ" | "PL";
 export interface CountryBounds {
     minLat: number;
     maxLat: number;
@@ -25,12 +25,17 @@ export interface CountryDefinition {
 }
 /** Spain including Canaries (same envelope as legacy SPAIN_BOUNDS). */
 export declare const SPAIN_COUNTRY: CountryDefinition;
-/** Mainland Czechia (approx). Listed before Poland so AABB overlap prefers CZ. */
+/** Mainland Germany (approx). */
+export declare const GERMANY_COUNTRY: CountryDefinition;
+/** Mainland Czechia (approx). */
 export declare const CZECHIA_COUNTRY: CountryDefinition;
 /** Mainland Poland (approx). */
 export declare const POLAND_COUNTRY: CountryDefinition;
 export declare const COUNTRIES: Record<CountryId, CountryDefinition>;
-/** Explicit order: CZ before PL for southern-border AABB ties. */
+/**
+ * Registration order for bbox fan-out. Point resolution uses nearest-centre
+ * among AABB hits so DE/CZ/PL border overlaps pick the right country.
+ */
 export declare const COUNTRY_IDS: CountryId[];
 export declare function pointInBounds(lat: number, lng: number, bounds: CountryBounds): boolean;
 /** First matching country for a point, or null if outside coverage. */
