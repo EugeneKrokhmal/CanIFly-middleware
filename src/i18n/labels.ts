@@ -199,7 +199,8 @@ export function obstacleLabel(
 }
 
 export function pinKindLabel(kind: PinKind, locale: Locale = "es"): string {
-  return PIN_KIND_LABELS[locale][kind] ?? PIN_KIND_LABELS.en[kind];
+  const labels = PIN_KIND_LABELS[locale] ?? PIN_KIND_LABELS.en;
+  return labels[kind] ?? PIN_KIND_LABELS.en[kind];
 }
 
 export function typesForPinKind(kind: PinKind): readonly ObstacleType[] {
@@ -217,7 +218,8 @@ export function statusLabel(
   status: AirspaceStatusLabel,
   locale: Locale = "es",
 ): string {
-  return STATUS_LABELS[locale][status] ?? STATUS_LABELS.en[status];
+  const labels = STATUS_LABELS[locale] ?? STATUS_LABELS.en;
+  return labels[status] ?? STATUS_LABELS.en[status];
 }
 
 export function isObstacleInactive(likes: number, dislikes: number): boolean {

@@ -169,7 +169,8 @@ export function obstacleLabel(type, locale = "es") {
         String(type));
 }
 export function pinKindLabel(kind, locale = "es") {
-    return PIN_KIND_LABELS[locale][kind] ?? PIN_KIND_LABELS.en[kind];
+    const labels = PIN_KIND_LABELS[locale] ?? PIN_KIND_LABELS.en;
+    return labels[kind] ?? PIN_KIND_LABELS.en[kind];
 }
 export function typesForPinKind(kind) {
     return kind === "fly_spot" ? FLY_SPOT_TYPES : OBSTACLE_TYPES;
@@ -178,7 +179,8 @@ export function isTypeAllowedForKind(kind, type) {
     return typesForPinKind(kind).includes(type);
 }
 export function statusLabel(status, locale = "es") {
-    return STATUS_LABELS[locale][status] ?? STATUS_LABELS.en[status];
+    const labels = STATUS_LABELS[locale] ?? STATUS_LABELS.en;
+    return labels[status] ?? STATUS_LABELS.en[status];
 }
 export function isObstacleInactive(likes, dislikes) {
     const total = likes + dislikes;
