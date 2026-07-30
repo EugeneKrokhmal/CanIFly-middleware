@@ -21,7 +21,8 @@ export type ZoneSource =
   | "anscr"
   | "dipul"
   | "geopf"
-  | "dronezoner";
+  | "dronezoner"
+  | "foca";
 
 export interface ScheduleEntry {
   day: string[];

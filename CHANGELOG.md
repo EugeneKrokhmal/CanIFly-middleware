@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `CH` (Switzerland / FOCA) with CH↔DE / CH↔FR border heuristics
+- `ZoneSource` value `"foca"`; hard no-fly for AIR_TRAFFIC / aerodrome Swiss zones
 - Country registry entry `DK` (Denmark / Dronezoner) with DE↔DK Flensburg border heuristics
 - `ZoneSource` value `"dronezoner"`; hard no-fly for Rød / airport / HEMS / military Danish zones
 - German UI locale (`de`) for labels / status / pin kinds

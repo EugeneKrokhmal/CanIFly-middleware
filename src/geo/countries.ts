@@ -1,6 +1,6 @@
 import type { Bbox } from "./bbox.js";
 
-export type CountryId = "ES" | "DE" | "FR" | "DK" | "CZ" | "PL";
+export type CountryId = "ES" | "DE" | "FR" | "DK" | "CH" | "CZ" | "PL";
 
 export interface CountryBounds {
   minLat: number;
@@ -90,6 +90,28 @@ export const DENMARK_COUNTRY: CountryDefinition = {
   },
 };
 
+/** Switzerland + Liechtenstein envelope (FOCA SwissUASGeozones). */
+export const SWITZERLAND_COUNTRY: CountryDefinition = {
+  id: "CH",
+  iso2: "CH",
+  iso3: "CHE",
+  nameEn: "Switzerland",
+  nameLocal: "Schweiz",
+  center: [8.23, 46.8],
+  bounds: {
+    minLat: 45.8,
+    maxLat: 47.85,
+    minLng: 5.95,
+    maxLng: 10.55,
+  },
+  official: {
+    mapUrl: "https://map.geo.admin.ch/?topic=ech&layers=ch.bazl.einschraenkungen-drohnen",
+    authorityUrl:
+      "https://data.geo.admin.ch/ch.bazl.einschraenkungen-drohnen/",
+    authorityName: "FOCA / geo.admin.ch",
+  },
+};
+
 /** Metropolitan France + Corsica (approx; Géopf WFS covers overseas too). */
 export const FRANCE_COUNTRY: CountryDefinition = {
   id: "FR",
@@ -159,15 +181,16 @@ export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   DE: GERMANY_COUNTRY,
   FR: FRANCE_COUNTRY,
   DK: DENMARK_COUNTRY,
+  CH: SWITZERLAND_COUNTRY,
   CZ: CZECHIA_COUNTRY,
   PL: POLAND_COUNTRY,
 };
 
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
- * among AABB hits so DE/CZ/PL/FR/DK border overlaps pick the right country.
+ * among AABB hits so DE/CZ/PL/FR/DK/CH border overlaps pick the right country.
  */
-export const COUNTRY_IDS: CountryId[] = ["ES", "DE", "FR", "DK", "CZ", "PL"];
+export const COUNTRY_IDS: CountryId[] = ["ES", "DE", "FR", "DK", "CH", "CZ", "PL"];
 
 export function pointInBounds(
   lat: number,
@@ -205,6 +228,14 @@ export function resolveCountry(lat: number, lng: number): CountryId | null {
   if (hits.length === 1) return hits[0];
 
   // AABB overlaps: prefer real-world border heuristics before centre distance.
+  // CH before DE↔FR Rhine — Basel sits in all three AABBs.
+  if (hits.includes("CH") && (hits.includes("DE") || hits.includes("FR"))) {
+    // Core CH / LI south of the High Rhine; German Konstanz tip east of ~9.05°.
+    if (lat <= 47.58) return "CH";
+    if (hits.includes("DE") && lng >= 9.05 && lat >= 47.65) return "DE";
+    if (hits.includes("FR") && lng <= 6.15 && lat >= 46.7) return "FR";
+    if (lat <= 47.72 && lng <= 9.0) return "CH";
+  }
   if (hits.includes("DE") && hits.includes("FR")) {
     // West of the Rhine → France, except the Saarland wedge (DE west of Rhine).
     // East of the Rhine → Germany. Rhine lng approx Basel → Lauterbourg.

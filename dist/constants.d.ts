@@ -2,6 +2,7 @@ export declare const SPAIN_CENTER: [number, number];
 export declare const GERMANY_CENTER: [number, number];
 export declare const FRANCE_CENTER: [number, number];
 export declare const DENMARK_CENTER: [number, number];
+export declare const SWITZERLAND_CENTER: [number, number];
 export declare const CZECHIA_CENTER: [number, number];
 export declare const POLAND_CENTER: [number, number];
 export declare const DEFAULT_ZOOM = 6;

@@ -45,6 +45,17 @@ function isDenmarkZone(zone: MatchedZone): boolean {
   return c === "DK" || c === "DNK" || zone.source === "dronezoner";
 }
 
+function isSwitzerlandZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return (
+    c === "CH" ||
+    c === "CHE" ||
+    c === "LI" ||
+    c === "LIE" ||
+    zone.source === "foca"
+  );
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -134,6 +145,20 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
       blob.includes("MILITÆR") ||
       blob.includes("MILITAER") ||
       blob.includes("HEMS")
+    );
+  }
+  if (isSwitzerlandZone(zone)) {
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    // FOCA marks aerodromes / CTR as AIR_TRAFFIC (still REQ_AUTHORISATION in JSON).
+    if (reasons.some((r) => r === "AIR_TRAFFIC" || r.includes("AIR_TRAFFIC"))) {
+      return true;
+    }
+    const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+    return (
+      blob.includes("AIRPORT") ||
+      blob.includes("CTR ") ||
+      /^CTR\d/.test(blob) ||
+      /\bLS[A-Z]{2}\b/.test(blob)
     );
   }
   return false;
