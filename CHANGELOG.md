@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] — 2026-07-30
+
+### Added
+- Country registry entry `CZ` (Czechia / ANS CR) with bounds ordered before Poland for AABB ties
+- `ZoneSource` value `"anscr"` for Czech UAS zones (live aimgis tag)
+
 ## [0.2.0] — 2026-07-30
 
 ### Added

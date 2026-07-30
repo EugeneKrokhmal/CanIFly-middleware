@@ -56,7 +56,7 @@ export function isNationalPopulationAdvisory(zone) {
     if (NATIONAL_POPULATION_IDS.has(id))
         return true;
     if (zone.source === "urbano" &&
-        zone.reason.some((r) => String(r).toUpperCase().includes("POPULATION")) &&
+        zoneReasons(zone).some((r) => r.toUpperCase().includes("POPULATION")) &&
         !(zone.message ?? "").trim()) {
         return true;
     }
@@ -85,10 +85,23 @@ export function freeBandCeilingM(zones) {
         return null;
     return Math.min(...bands);
 }
-function isMilitary(zone) {
-    return zone.reason.some((r) => String(r).toUpperCase().includes("MILITARY"));
+function zoneReasons(zone) {
+    const raw = zone.reason;
+    if (Array.isArray(raw))
+        return raw.map(String);
+    if (typeof raw === "string" && raw.length > 0) {
+        return raw
+            .split(/[,;|]/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+    }
+    return [];
 }
-function zoneToStatus(zone) {
+function isMilitary(zone) {
+    return zoneReasons(zone).some((r) => r.toUpperCase().includes("MILITARY"));
+}
+/** Map/sidebar visual severity for a single zone polygon. */
+export function zoneVisualStatus(zone) {
     if (isNationalPopulationAdvisory(zone))
         return "clear";
     if (isFreeBandZone(zone))
@@ -123,6 +136,15 @@ function statusPriority(status) {
         return 2;
     return 1;
 }
+function formatAltitudeBand(zone) {
+    const msg = zone.message ?? "";
+    const fl = msg.match(/FL\s*(\d+)/i);
+    const upperRef = (zone.upperRef ?? zone.lowerRef ?? "AGL").toUpperCase();
+    if (fl && (upperRef === "AMSL" || zone.upperLimitM >= 5000)) {
+        return `${Math.round(zone.lowerLimitM)}m ${zone.lowerRef}–FL${fl[1]}`;
+    }
+    return `${Math.round(zone.lowerLimitM)}–${Math.round(zone.upperLimitM)}m ${zone.lowerRef}`;
+}
 function buildSummary(status, zones, advisory, freeLimit) {
     if (status === "clear") {
         if (advisory.length > 0) {
@@ -140,7 +162,7 @@ function buildSummary(status, zones, advisory, freeLimit) {
         return `Clear to fly up to ~${Math.round(freeLimit)}m AGL without prior coordination — auth/coordination required above${names ? ` (${names})` : ""}.`;
     }
     const top = zones[0];
-    const band = `${Math.round(top.lowerLimitM)}–${Math.round(top.upperLimitM)}m ${top.lowerRef}`;
+    const band = formatAltitudeBand(top);
     const name = cleanName(top);
     const msg = (top.message ?? "").toLowerCase();
     if (status === "prohibited") {
@@ -212,7 +234,7 @@ export function classifyStatus(zones, options = {}) {
     const scored = driving
         .map((zone) => ({
         zone,
-        status: zoneToStatus(zone),
+        status: zoneVisualStatus(zone),
         rank: restrictionRank(zone.restriction) + zonePriorityBoost(zone),
     }))
         .sort((a, b) => {

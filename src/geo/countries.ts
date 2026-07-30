@@ -1,6 +1,6 @@
 import type { Bbox } from "./bbox.js";
 
-export type CountryId = "ES" | "PL";
+export type CountryId = "ES" | "CZ" | "PL";
 
 export interface CountryBounds {
   minLat: number;
@@ -48,6 +48,27 @@ export const SPAIN_COUNTRY: CountryDefinition = {
   },
 };
 
+/** Mainland Czechia (approx). Listed before Poland so AABB overlap prefers CZ. */
+export const CZECHIA_COUNTRY: CountryDefinition = {
+  id: "CZ",
+  iso2: "CZ",
+  iso3: "CZE",
+  nameEn: "Czechia",
+  nameLocal: "Česko",
+  center: [14.42, 50.08],
+  bounds: {
+    minLat: 48.55,
+    maxLat: 51.06,
+    minLng: 12.09,
+    maxLng: 18.86,
+  },
+  official: {
+    mapUrl: "https://dronemap.gov.cz/",
+    authorityUrl: "https://aim.rlp.cz/",
+    authorityName: "ANS CR",
+  },
+};
+
 /** Mainland Poland (approx). */
 export const POLAND_COUNTRY: CountryDefinition = {
   id: "PL",
@@ -71,10 +92,12 @@ export const POLAND_COUNTRY: CountryDefinition = {
 
 export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   ES: SPAIN_COUNTRY,
+  CZ: CZECHIA_COUNTRY,
   PL: POLAND_COUNTRY,
 };
 
-export const COUNTRY_IDS = Object.keys(COUNTRIES) as CountryId[];
+/** Explicit order: CZ before PL for southern-border AABB ties. */
+export const COUNTRY_IDS: CountryId[] = ["ES", "CZ", "PL"];
 
 export function pointInBounds(
   lat: number,

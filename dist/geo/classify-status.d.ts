@@ -1,4 +1,4 @@
-import type { MatchedZone, StatusResult } from "./ed318-types.js";
+import type { AirspaceStatus, MatchedZone, StatusResult } from "./ed318-types.js";
 /** Surface aerodrome / hospital ban — no flight without coordination (Spain). */
 export declare function isHardNoFlyZone(zone: MatchedZone): boolean;
 export declare function isNationalPopulationAdvisory(zone: MatchedZone): boolean;
@@ -9,6 +9,8 @@ export declare function isNationalPopulationAdvisory(zone: MatchedZone): boolean
 export declare function isFreeBandZone(zone: MatchedZone): boolean;
 /** Free ceiling in metres AGL from free-band zones (tightest / minimum). */
 export declare function freeBandCeilingM(zones: MatchedZone[]): number | null;
+/** Map/sidebar visual severity for a single zone polygon. */
+export declare function zoneVisualStatus(zone: MatchedZone): AirspaceStatus;
 /**
  * Collapse overlapping matched zones into a single human-readable status.
  * Highest severity wins (prohibited > restricted > limited > clear).

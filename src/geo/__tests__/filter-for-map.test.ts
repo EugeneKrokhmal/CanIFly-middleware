@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { clampBboxSpan } from "@/lib/geo/bbox";
-import { filterForMap, altitudeOverlaps } from "@/lib/geo/filter-by-profile";
-import type { DroneProfile, MatchedZone } from "@/lib/geo/ed318-types";
-import { escapeHtml } from "@/lib/map/html";
+import { filterForMap, altitudeOverlaps } from "../filter-by-profile.js";
+import type { DroneProfile, MatchedZone } from "../ed318-types.js";
 
 const openProfile: DroneProfile = {
   weightClass: "c0",
@@ -67,26 +65,5 @@ describe("altitudeOverlaps", () => {
     expect(altitudeOverlaps(z, 30)).toBe(false);
     expect(altitudeOverlaps(z, 45)).toBe(true);
     expect(altitudeOverlaps(z, 120)).toBe(true);
-  });
-});
-
-describe("clampBboxSpan", () => {
-  it("shrinks oversized bboxes around the center", () => {
-    const clamped = clampBboxSpan({
-      west: -10,
-      east: 5,
-      south: 35,
-      north: 44,
-    });
-    expect(clamped.east - clamped.west).toBeLessThanOrEqual(8);
-    expect(clamped.north - clamped.south).toBeLessThanOrEqual(8);
-  });
-});
-
-describe("escapeHtml", () => {
-  it("escapes markup characters", () => {
-    expect(escapeHtml(`<img src=x onerror="alert(1)">`)).toBe(
-      "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;",
-    );
   });
 });

@@ -8,6 +8,7 @@ export declare const appLocaleSchema: z.ZodEnum<{
     es: "es";
     en: "en";
     pl: "pl";
+    cs: "cs";
 }>;
 export declare const authCredentialsSchema: z.ZodObject<{
     email: z.ZodString;
@@ -22,6 +23,7 @@ export declare const authRegisterSchema: z.ZodObject<{
         es: "es";
         en: "en";
         pl: "pl";
+        cs: "cs";
     }>>>;
 }, z.core.$strip>;
 export declare const authEmailSchema: z.ZodObject<{
@@ -39,6 +41,7 @@ export declare const updateLocaleSchema: z.ZodObject<{
         es: "es";
         en: "en";
         pl: "pl";
+        cs: "cs";
     }>;
 }, z.core.$strip>;
 export declare const updateAccountSchema: z.ZodObject<{

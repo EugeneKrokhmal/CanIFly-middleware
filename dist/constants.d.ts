@@ -1,5 +1,4 @@
 export declare const SPAIN_CENTER: [number, number];
-export declare const POLAND_CENTER: [number, number];
 export declare const DEFAULT_ZOOM = 6;
 export declare const DEFAULT_DRONE_PROFILE: {
     weightClass: "c0";
@@ -33,10 +32,6 @@ export declare const SERVAIS_LAYER_IDS: {
     readonly urbano: 3;
 };
 export declare const SERVAIS_MAX_PAGE_SIZE = 2000;
-/** @deprecated Prefer COUNTRIES.ES.bounds / resolveCountry */
-export declare const SPAIN_BOUNDS: import("./geo/countries.js").CountryBounds;
-/** @deprecated Prefer COUNTRIES.PL.bounds */
-export declare const POLAND_BOUNDS: import("./geo/countries.js").CountryBounds;
 /** ENAIRE Drones ZGUAS fill (FeatureServer pink) — kept light so basemap stays readable. */
 export declare const ENAIRE_ZONE_STYLE: {
     readonly fill: "#ffbebe";

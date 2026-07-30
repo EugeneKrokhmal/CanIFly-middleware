@@ -17,7 +17,8 @@ export type ZoneSource =
   | "infra"
   | "servais"
   | "fixture"
-  | "pansa";
+  | "pansa"
+  | "anscr";
 
 export interface ScheduleEntry {
   day: string[];

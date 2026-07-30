@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { classifyStatus } from "@/lib/geo/classify-status";
-import { filterByProfile } from "@/lib/geo/filter-by-profile";
-import type { MatchedZone } from "@/lib/geo/ed318-types";
+import { classifyStatus } from "../classify-status.js";
+import { filterByProfile } from "../filter-by-profile.js";
+import type { MatchedZone } from "../ed318-types.js";
 
 function zone(partial: Partial<MatchedZone> & Pick<MatchedZone, "identifier" | "restriction">): MatchedZone {
   return {
     name: partial.name ?? partial.identifier,
     reason: partial.reason ?? [],
     source: partial.source ?? "fixture",
+    country: partial.country ?? "ES",
     lowerLimitM: partial.lowerLimitM ?? 0,
     upperLimitM: partial.upperLimitM ?? 120,
     lowerRef: partial.lowerRef ?? "AGL",

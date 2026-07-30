@@ -59,7 +59,7 @@ export function isNationalPopulationAdvisory(zone: MatchedZone): boolean {
   if (NATIONAL_POPULATION_IDS.has(id)) return true;
   if (
     zone.source === "urbano" &&
-    zone.reason.some((r) => String(r).toUpperCase().includes("POPULATION")) &&
+    zoneReasons(zone).some((r) => r.toUpperCase().includes("POPULATION")) &&
     !(zone.message ?? "").trim()
   ) {
     return true;
@@ -90,11 +90,26 @@ export function freeBandCeilingM(zones: MatchedZone[]): number | null {
   return Math.min(...bands);
 }
 
-function isMilitary(zone: MatchedZone): boolean {
-  return zone.reason.some((r) => String(r).toUpperCase().includes("MILITARY"));
+function zoneReasons(zone: MatchedZone): string[] {
+  const raw = zone.reason as unknown;
+  if (Array.isArray(raw)) return raw.map(String);
+  if (typeof raw === "string" && raw.length > 0) {
+    return raw
+      .split(/[,;|]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
 }
 
-function zoneToStatus(zone: MatchedZone): AirspaceStatus {
+function isMilitary(zone: MatchedZone): boolean {
+  return zoneReasons(zone).some((r) =>
+    r.toUpperCase().includes("MILITARY"),
+  );
+}
+
+/** Map/sidebar visual severity for a single zone polygon. */
+export function zoneVisualStatus(zone: MatchedZone): AirspaceStatus {
   if (isNationalPopulationAdvisory(zone)) return "clear";
   if (isFreeBandZone(zone)) return "limited";
 
@@ -122,6 +137,16 @@ function statusPriority(status: AirspaceStatus): number {
   return 1;
 }
 
+function formatAltitudeBand(zone: MatchedZone): string {
+  const msg = zone.message ?? "";
+  const fl = msg.match(/FL\s*(\d+)/i);
+  const upperRef = (zone.upperRef ?? zone.lowerRef ?? "AGL").toUpperCase();
+  if (fl && (upperRef === "AMSL" || zone.upperLimitM >= 5000)) {
+    return `${Math.round(zone.lowerLimitM)}m ${zone.lowerRef}–FL${fl[1]}`;
+  }
+  return `${Math.round(zone.lowerLimitM)}–${Math.round(zone.upperLimitM)}m ${zone.lowerRef}`;
+}
+
 function buildSummary(
   status: AirspaceStatus,
   zones: MatchedZone[],
@@ -146,7 +171,7 @@ function buildSummary(
   }
 
   const top = zones[0];
-  const band = `${Math.round(top.lowerLimitM)}–${Math.round(top.upperLimitM)}m ${top.lowerRef}`;
+  const band = formatAltitudeBand(top);
   const name = cleanName(top);
   const msg = (top.message ?? "").toLowerCase();
 
@@ -236,7 +261,7 @@ export function classifyStatus(
   const scored = driving
     .map((zone) => ({
       zone,
-      status: zoneToStatus(zone),
+      status: zoneVisualStatus(zone),
       rank: restrictionRank(zone.restriction) + zonePriorityBoost(zone),
     }))
     .sort((a, b) => {

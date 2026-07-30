@@ -18,6 +18,26 @@ export const SPAIN_COUNTRY = {
         authorityName: "AESA / ENAIRE",
     },
 };
+/** Mainland Czechia (approx). Listed before Poland so AABB overlap prefers CZ. */
+export const CZECHIA_COUNTRY = {
+    id: "CZ",
+    iso2: "CZ",
+    iso3: "CZE",
+    nameEn: "Czechia",
+    nameLocal: "Česko",
+    center: [14.42, 50.08],
+    bounds: {
+        minLat: 48.55,
+        maxLat: 51.06,
+        minLng: 12.09,
+        maxLng: 18.86,
+    },
+    official: {
+        mapUrl: "https://dronemap.gov.cz/",
+        authorityUrl: "https://aim.rlp.cz/",
+        authorityName: "ANS CR",
+    },
+};
 /** Mainland Poland (approx). */
 export const POLAND_COUNTRY = {
     id: "PL",
@@ -40,9 +60,11 @@ export const POLAND_COUNTRY = {
 };
 export const COUNTRIES = {
     ES: SPAIN_COUNTRY,
+    CZ: CZECHIA_COUNTRY,
     PL: POLAND_COUNTRY,
 };
-export const COUNTRY_IDS = Object.keys(COUNTRIES);
+/** Explicit order: CZ before PL for southern-border AABB ties. */
+export const COUNTRY_IDS = ["ES", "CZ", "PL"];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&
         lat <= bounds.maxLat &&
