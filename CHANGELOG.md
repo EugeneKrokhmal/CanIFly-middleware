@@ -3,11 +3,14 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `FR` (France / Géoportail) with DE↔FR and ES↔FR border heuristics
 - Country registry entry `DE` (Germany / dipul) with DE↔CZ / DE↔PL border heuristics
 - Hard no-fly heuristics for German aerodromes (FLUGHAFEN / FLUGPLATZ / ED-R) and Czech inner AD zones (LKR314B/D/F)
 
 ### Changed
 - `zoneVisualStatus` / military detection recognise German `MILITAER` and Czech `VOJENSK` reasons
+- DE↔FR border: Rhine centerline + Saarland wedge (was a fixed lng≥7.7 that mis-tagged Strasbourg)
+- ES↔FR border: Atlantic Basque Bidassoa tip (Irun/Hendaye) before Pyrenees latitude split
 
 ## [0.3.0] — 2026-07-30
 

@@ -35,6 +35,11 @@ function isCzechiaZone(zone: MatchedZone): boolean {
   return c === "CZ" || c === "CZE" || zone.source === "anscr";
 }
 
+function isFranceZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "FR" || c === "FRA" || zone.source === "geopf";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -106,6 +111,10 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
       return true;
     }
     return false;
+  }
+  if (isFranceZone(zone)) {
+    const blob = `${zone.name} ${zone.message ?? ""} ${zoneReasons(zone).join(" ")}`.toUpperCase();
+    return blob.includes("INTERDIT") || blob.includes("PROHIB");
   }
   return false;
 }

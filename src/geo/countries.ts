@@ -1,6 +1,6 @@
 import type { Bbox } from "./bbox.js";
 
-export type CountryId = "ES" | "DE" | "CZ" | "PL";
+export type CountryId = "ES" | "DE" | "FR" | "CZ" | "PL";
 
 export interface CountryBounds {
   minLat: number;
@@ -69,6 +69,28 @@ export const GERMANY_COUNTRY: CountryDefinition = {
   },
 };
 
+/** Metropolitan France + Corsica (approx; Géopf WFS covers overseas too). */
+export const FRANCE_COUNTRY: CountryDefinition = {
+  id: "FR",
+  iso2: "FR",
+  iso3: "FRA",
+  nameEn: "France",
+  nameLocal: "France",
+  center: [2.35, 46.6],
+  bounds: {
+    minLat: 41.3,
+    maxLat: 51.15,
+    minLng: -5.25,
+    maxLng: 9.7,
+  },
+  official: {
+    mapUrl: "https://www.geoportail.gouv.fr/donnees/restrictions-pour-drones-de-loisir",
+    authorityUrl:
+      "https://data.geopf.fr/wfs/ows?SERVICE=WFS&REQUEST=GetCapabilities",
+    authorityName: "DGAC / Géoportail",
+  },
+};
+
 /** Mainland Czechia (approx). */
 export const CZECHIA_COUNTRY: CountryDefinition = {
   id: "CZ",
@@ -114,15 +136,16 @@ export const POLAND_COUNTRY: CountryDefinition = {
 export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   ES: SPAIN_COUNTRY,
   DE: GERMANY_COUNTRY,
+  FR: FRANCE_COUNTRY,
   CZ: CZECHIA_COUNTRY,
   PL: POLAND_COUNTRY,
 };
 
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
- * among AABB hits so DE/CZ/PL border overlaps pick the right country.
+ * among AABB hits so DE/CZ/PL/FR border overlaps pick the right country.
  */
-export const COUNTRY_IDS: CountryId[] = ["ES", "DE", "CZ", "PL"];
+export const COUNTRY_IDS: CountryId[] = ["ES", "DE", "FR", "CZ", "PL"];
 
 export function pointInBounds(
   lat: number,
@@ -143,6 +166,14 @@ function dist2ToCenter(lat: number, lng: number, center: [number, number]): numb
   return dLng * dLng + dLat * dLat;
 }
 
+/** Approximate Rhine centerline lng for the DE/FR border (Basel → Lauterbourg). */
+function rhineDeFrLng(lat: number): number {
+  if (lat < 48.2) return 7.58;
+  if (lat < 48.5) return 7.58 + ((lat - 48.2) * (7.72 - 7.58)) / 0.3;
+  if (lat < 49.0) return 7.72 + ((lat - 48.5) * (8.18 - 7.72)) / 0.5;
+  return 8.18;
+}
+
 /** First matching country for a point, or null if outside coverage. */
 export function resolveCountry(lat: number, lng: number): CountryId | null {
   const hits = COUNTRY_IDS.filter((id) =>
@@ -152,6 +183,28 @@ export function resolveCountry(lat: number, lng: number): CountryId | null {
   if (hits.length === 1) return hits[0];
 
   // AABB overlaps: prefer real-world border heuristics before centre distance.
+  if (hits.includes("DE") && hits.includes("FR")) {
+    // West of the Rhine → France, except the Saarland wedge (DE west of Rhine).
+    // East of the Rhine → Germany. Rhine lng approx Basel → Lauterbourg.
+    const rhineLng = rhineDeFrLng(lat);
+    if (lng >= rhineLng) return "DE";
+    // Saarland sits west of the Rhine but is German.
+    if (lat >= 49.1 && lng >= 6.5) return "DE";
+    return "FR";
+  }
+  if (hits.includes("ES") && hits.includes("FR")) {
+    // Atlantic Basque / Bidassoa tip (Irun ES vs Hendaye FR) before the
+    // coarse Pyrenees latitude split used further east.
+    if (lng < -1.0) {
+      // Hendaye / Côte Basque sits just north-east of Irun.
+      if (lat >= 43.35 && lng >= -1.78) return "FR";
+      if (lat <= 43.34 || lng <= -1.78) return "ES";
+      return "FR";
+    }
+    // South of ~42.5° / Pyrenees spine → Spain for shared AABB tips.
+    if (lat <= 42.6) return "ES";
+    return "FR";
+  }
   if (hits.includes("DE") && hits.includes("CZ")) {
     // Saxony / Upper Lusatia sits in the CZ AABB but is German.
     if (lat >= 50.85 && lng <= 14.3) return "DE";

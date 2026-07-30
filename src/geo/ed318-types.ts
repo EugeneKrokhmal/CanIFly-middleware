@@ -19,7 +19,8 @@ export type ZoneSource =
   | "fixture"
   | "pansa"
   | "anscr"
-  | "dipul";
+  | "dipul"
+  | "geopf";
 
 export interface ScheduleEntry {
   day: string[];

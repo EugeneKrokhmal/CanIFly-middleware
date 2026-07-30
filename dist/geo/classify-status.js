@@ -23,6 +23,10 @@ function isCzechiaZone(zone) {
     const c = (zone.country ?? "").toUpperCase();
     return c === "CZ" || c === "CZE" || zone.source === "anscr";
 }
+function isFranceZone(zone) {
+    const c = (zone.country ?? "").toUpperCase();
+    return c === "FR" || c === "FRA" || zone.source === "geopf";
+}
 function restrictionRank(restriction) {
     const r = String(restriction).toUpperCase();
     if (r === "PROHIBITED")
@@ -90,6 +94,10 @@ export function isHardNoFlyZone(zone) {
             return true;
         }
         return false;
+    }
+    if (isFranceZone(zone)) {
+        const blob = `${zone.name} ${zone.message ?? ""} ${zoneReasons(zone).join(" ")}`.toUpperCase();
+        return blob.includes("INTERDIT") || blob.includes("PROHIB");
     }
     return false;
 }

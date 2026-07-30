@@ -1,6 +1,7 @@
-import { COUNTRIES, GERMANY_COUNTRY, SPAIN_COUNTRY } from "./geo/countries.js";
+import { COUNTRIES, FRANCE_COUNTRY, GERMANY_COUNTRY, SPAIN_COUNTRY, } from "./geo/countries.js";
 export const SPAIN_CENTER = SPAIN_COUNTRY.center;
 export const GERMANY_CENTER = GERMANY_COUNTRY.center;
+export const FRANCE_CENTER = FRANCE_COUNTRY.center;
 export const CZECHIA_CENTER = COUNTRIES.CZ.center;
 export const POLAND_CENTER = COUNTRIES.PL.center;
 export const DEFAULT_ZOOM = 6;
