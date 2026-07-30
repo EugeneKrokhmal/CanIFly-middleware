@@ -38,6 +38,26 @@ export const GERMANY_COUNTRY = {
         authorityName: "dipul / DFS",
     },
 };
+/** Mainland Denmark + nearby islands (approx; Dronezoner covers DK). */
+export const DENMARK_COUNTRY = {
+    id: "DK",
+    iso2: "DK",
+    iso3: "DNK",
+    nameEn: "Denmark",
+    nameLocal: "Danmark",
+    center: [10.0, 56.0],
+    bounds: {
+        minLat: 54.5,
+        maxLat: 57.8,
+        minLng: 7.8,
+        maxLng: 15.3,
+    },
+    official: {
+        mapUrl: "https://dronezoner.dk/",
+        authorityUrl: "https://dronezoner.eu/API/",
+        authorityName: "Trafikstyrelsen / Dronezoner",
+    },
+};
 /** Metropolitan France + Corsica (approx; Géopf WFS covers overseas too). */
 export const FRANCE_COUNTRY = {
     id: "FR",
@@ -102,14 +122,15 @@ export const COUNTRIES = {
     ES: SPAIN_COUNTRY,
     DE: GERMANY_COUNTRY,
     FR: FRANCE_COUNTRY,
+    DK: DENMARK_COUNTRY,
     CZ: CZECHIA_COUNTRY,
     PL: POLAND_COUNTRY,
 };
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
- * among AABB hits so DE/CZ/PL/FR border overlaps pick the right country.
+ * among AABB hits so DE/CZ/PL/FR/DK border overlaps pick the right country.
  */
-export const COUNTRY_IDS = ["ES", "DE", "FR", "CZ", "PL"];
+export const COUNTRY_IDS = ["ES", "DE", "FR", "DK", "CZ", "PL"];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&
         lat <= bounds.maxLat &&
@@ -177,6 +198,16 @@ export function resolveCountry(lat, lng) {
         if (lng >= 15.0)
             return "PL";
         return "DE";
+    }
+    if (hits.includes("DE") && hits.includes("DK")) {
+        // Flensburg / Sønderjylland: north of ~54.87° → Denmark; south → Germany.
+        // Also keep Sylt / North Frisian German islands (DE) west of ~8.5° when
+        // south of that latitude band.
+        if (lat >= 54.9)
+            return "DK";
+        if (lat <= 54.8)
+            return "DE";
+        return lng >= 9.2 ? "DK" : "DE";
     }
     if (hits.includes("CZ") && hits.includes("PL")) {
         return "CZ";

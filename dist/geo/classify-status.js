@@ -27,6 +27,10 @@ function isFranceZone(zone) {
     const c = (zone.country ?? "").toUpperCase();
     return c === "FR" || c === "FRA" || zone.source === "geopf";
 }
+function isDenmarkZone(zone) {
+    const c = (zone.country ?? "").toUpperCase();
+    return c === "DK" || c === "DNK" || zone.source === "dronezoner";
+}
 function restrictionRank(restriction) {
     const r = String(restriction).toUpperCase();
     if (r === "PROHIBITED")
@@ -98,6 +102,19 @@ export function isHardNoFlyZone(zone) {
     if (isFranceZone(zone)) {
         const blob = `${zone.name} ${zone.message ?? ""} ${zoneReasons(zone).join(" ")}`.toUpperCase();
         return blob.includes("INTERDIT") || blob.includes("PROHIB");
+    }
+    if (isDenmarkZone(zone)) {
+        const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+        // Farve 1 = Rød (flyvesikring); airports / HEMS / military also hard.
+        if (reasons.some((r) => r === "FARVE:1" || r === "ROD" || r === "RØD")) {
+            return true;
+        }
+        const blob = `${zone.name} ${zone.identifier} ${reasons.join(" ")}`.toUpperCase();
+        return (blob.includes("LUFTHAVN") ||
+            blob.includes("AIRPORT") ||
+            blob.includes("MILITÆR") ||
+            blob.includes("MILITAER") ||
+            blob.includes("HEMS"));
     }
     return false;
 }

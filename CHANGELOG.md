@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `DK` (Denmark / Dronezoner) with DE↔DK Flensburg border heuristics
+- `ZoneSource` value `"dronezoner"`; hard no-fly for Rød / airport / HEMS / military Danish zones
 - German UI locale (`de`) for labels / status / pin kinds
 - French UI locale (`fr`) for labels / status / pin kinds
 - Harden `statusLabel` / `pinKindLabel` when locale is missing from the maps

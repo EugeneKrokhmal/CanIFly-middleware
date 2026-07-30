@@ -1,5 +1,6 @@
 import {
   COUNTRIES,
+  DENMARK_COUNTRY,
   FRANCE_COUNTRY,
   GERMANY_COUNTRY,
   SPAIN_COUNTRY,
@@ -8,6 +9,7 @@ import {
 export const SPAIN_CENTER: [number, number] = SPAIN_COUNTRY.center;
 export const GERMANY_CENTER: [number, number] = GERMANY_COUNTRY.center;
 export const FRANCE_CENTER: [number, number] = FRANCE_COUNTRY.center;
+export const DENMARK_CENTER: [number, number] = DENMARK_COUNTRY.center;
 export const CZECHIA_CENTER: [number, number] = COUNTRIES.CZ.center;
 export const POLAND_CENTER: [number, number] = COUNTRIES.PL.center;
 export const DEFAULT_ZOOM = 6;

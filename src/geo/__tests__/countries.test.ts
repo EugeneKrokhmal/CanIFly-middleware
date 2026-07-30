@@ -6,6 +6,7 @@ describe("resolveCountry", () => {
     ["Paris", 48.8566, 2.3522, "FR"],
     ["Berlin", 52.52, 13.405, "DE"],
     ["Madrid", 40.4168, -3.7038, "ES"],
+    ["Copenhagen", 55.6761, 12.5683, "DK"],
     ["Prague", 50.0755, 14.4378, "CZ"],
     ["Warsaw", 52.2297, 21.0122, "PL"],
   ] as const)("%s → %s", (_name, lat, lng, want) => {
@@ -35,6 +36,12 @@ describe("resolveCountry", () => {
     expect(resolveCountry(50.917, 14.155)).toBe("DE"); // Bad Schandau
     expect(resolveCountry(51.152, 14.987)).toBe("DE"); // Görlitz
     expect(resolveCountry(51.149, 15.01)).toBe("PL"); // Zgorzelec
+  });
+
+  it("DE↔DK Flensburg / Sønderjylland", () => {
+    expect(resolveCountry(55.4038, 10.4024)).toBe("DK"); // Odense
+    expect(resolveCountry(54.793, 9.433)).toBe("DE"); // Flensburg
+    expect(resolveCountry(55.059, 9.418)).toBe("DK"); // Padborg / border DK side
   });
 
   it("outside coverage → null", () => {
