@@ -1,4 +1,4 @@
-export type Locale = "es" | "en" | "pl" | "cs";
+export type Locale = "es" | "en" | "de" | "pl" | "cs";
 export type PinKind = "obstacle" | "fly_spot";
 export type ObstacleType = "construction" | "crane" | "electric_line" | "air_sports" | "park" | "rooftop" | "field" | "beach" | "other";
 export declare const OBSTACLE_TYPES: readonly ["construction", "crane", "electric_line", "air_sports", "other"];

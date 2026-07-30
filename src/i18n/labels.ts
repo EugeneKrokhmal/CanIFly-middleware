@@ -1,4 +1,4 @@
-export type Locale = "es" | "en" | "pl" | "cs";
+export type Locale = "es" | "en" | "de" | "pl" | "cs";
 
 export type PinKind = "obstacle" | "fly_spot";
 
@@ -58,6 +58,17 @@ const OBSTACLE_LABELS: Record<Locale, Record<ObstacleType, string>> = {
     beach: "Playa",
     other: "Otro",
   },
+  de: {
+    construction: "Baustelle / Gebäude",
+    crane: "Kran",
+    electric_line: "Stromleitungen",
+    air_sports: "Luftsport in der Nähe",
+    park: "Park",
+    rooftop: "Dach",
+    field: "Feld / offenes Gelände",
+    beach: "Strand",
+    other: "Sonstiges",
+  },
   pl: {
     construction: "Budowa / budynek",
     crane: "Dźwig",
@@ -91,6 +102,10 @@ const PIN_KIND_LABELS: Record<Locale, Record<PinKind, string>> = {
     obstacle: "Obstáculo",
     fly_spot: "Zona de vuelo",
   },
+  de: {
+    obstacle: "Hindernis",
+    fly_spot: "Flugort",
+  },
   pl: {
     obstacle: "Przeszkoda",
     fly_spot: "Miejsce do lotu",
@@ -114,6 +129,12 @@ const STATUS_LABELS: Record<Locale, Record<AirspaceStatusLabel, string>> = {
     restricted: "Restringido",
     prohibited: "Prohibido",
   },
+  de: {
+    clear: "Frei",
+    limited: "Begrenzt",
+    restricted: "Eingeschränkt",
+    prohibited: "Verboten",
+  },
   pl: {
     clear: "Wolna",
     limited: "Ograniczona",
@@ -136,6 +157,8 @@ export function parseLocale(header: string | null | undefined): Locale {
   const lower = header.toLowerCase();
   if (lower.includes("cs") || lower.includes("cz")) return "cs";
   if (lower.includes("pl")) return "pl";
+  if (lower.startsWith("de") || lower.includes("de-") || lower.includes("de,"))
+    return "de";
   if (lower.includes("en") && !lower.startsWith("es")) return "en";
   return "es";
 }

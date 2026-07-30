@@ -7,6 +7,7 @@ export declare const weightClassSchema: z.ZodEnum<{
 export declare const appLocaleSchema: z.ZodEnum<{
     es: "es";
     en: "en";
+    de: "de";
     pl: "pl";
     cs: "cs";
 }>;
@@ -22,6 +23,7 @@ export declare const authRegisterSchema: z.ZodObject<{
     locale: z.ZodDefault<z.ZodOptional<z.ZodEnum<{
         es: "es";
         en: "en";
+        de: "de";
         pl: "pl";
         cs: "cs";
     }>>>;
@@ -40,6 +42,7 @@ export declare const updateLocaleSchema: z.ZodObject<{
     locale: z.ZodEnum<{
         es: "es";
         en: "en";
+        de: "de";
         pl: "pl";
         cs: "cs";
     }>;

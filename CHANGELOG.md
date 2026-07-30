@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- German UI locale (`de`) for labels / status / pin kinds
 - Country registry entry `FR` (France / Géoportail) with DE↔FR and ES↔FR border heuristics
 - Country registry entry `DE` (Germany / dipul) with DE↔CZ / DE↔PL border heuristics
 - Hard no-fly heuristics for German aerodromes (FLUGHAFEN / FLUGPLATZ / ED-R) and Czech inner AD zones (LKR314B/D/F)
