@@ -3,7 +3,7 @@ import { OPEN_CATEGORY_CEILING_AGL_M } from "../constants.js";
 
 export const weightClassSchema = z.enum(["c0", "c1", "c2"]);
 
-export const appLocaleSchema = z.enum(["es", "en"]);
+export const appLocaleSchema = z.enum(["es", "en", "pl"]);
 
 export const authCredentialsSchema = z.object({
   email: z.string().trim().email().max(254),

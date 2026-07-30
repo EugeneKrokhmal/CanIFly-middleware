@@ -35,6 +35,17 @@ const OBSTACLE_LABELS = {
         beach: "Playa",
         other: "Otro",
     },
+    pl: {
+        construction: "Budowa / budynek",
+        crane: "Dźwig",
+        electric_line: "Linie energetyczne",
+        air_sports: "Sporty powietrzne w pobliżu",
+        park: "Park",
+        rooftop: "Dach",
+        field: "Pole / otwarty teren",
+        beach: "Plaża",
+        other: "Inne",
+    },
 };
 const PIN_KIND_LABELS = {
     en: {
@@ -44,6 +55,10 @@ const PIN_KIND_LABELS = {
     es: {
         obstacle: "Obstáculo",
         fly_spot: "Zona de vuelo",
+    },
+    pl: {
+        obstacle: "Przeszkoda",
+        fly_spot: "Miejsce do lotu",
     },
 };
 const STATUS_LABELS = {
@@ -59,6 +74,12 @@ const STATUS_LABELS = {
         restricted: "Restringido",
         prohibited: "Prohibido",
     },
+    pl: {
+        clear: "Wolna",
+        limited: "Ograniczona",
+        restricted: "Zastrzeżona",
+        prohibited: "Zakazana",
+    },
 };
 /** @deprecated Prefer obstacleLabel(type, locale) */
 export const OBSTACLE_TYPE_LABELS = OBSTACLE_LABELS.en;
@@ -66,6 +87,8 @@ export function parseLocale(header) {
     if (!header)
         return "es";
     const lower = header.toLowerCase();
+    if (lower.includes("pl"))
+        return "pl";
     if (lower.includes("en") && !lower.startsWith("es"))
         return "en";
     return "es";
