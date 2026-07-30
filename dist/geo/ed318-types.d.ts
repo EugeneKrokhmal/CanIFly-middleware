@@ -2,7 +2,7 @@
 export type UasRestriction = "PROHIBITED" | "REQ_AUTHORISATION" | "CONDITIONAL" | "NO_RESTRICTION" | "USPACE" | string;
 export type VerticalReference = "AGL" | "AMSL" | "W84" | string;
 export type UomDimensions = "M" | "FT" | string;
-export type ZoneSource = "aero" | "urbano" | "infra" | "servais" | "fixture";
+export type ZoneSource = "aero" | "urbano" | "infra" | "servais" | "fixture" | "pansa";
 export interface ScheduleEntry {
     day: string[];
     startTime?: string;
@@ -61,6 +61,8 @@ export interface MatchedZone {
     restriction: UasRestriction;
     reason: string[];
     source: ZoneSource;
+    /** ISO alpha-2 when known (ES, PL). Used to gate national classify heuristics. */
+    country?: string;
     lowerLimitM: number;
     upperLimitM: number;
     lowerRef: VerticalReference;

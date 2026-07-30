@@ -5,13 +5,25 @@ import type {
   UasRestriction,
 } from "./ed318-types.js";
 
-/** Nationwide urban/population overlays — advisory only for open recreational. */
+/** Nationwide urban/population overlays — advisory only for open recreational (Spain). */
 const NATIONAL_POPULATION_IDS = new Set([
   "NPDRID",
   "NPRIAS",
   "NPILLA",
   "NPLONA",
 ]);
+
+function isSpainZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  if (c === "ES" || c === "ESP") return true;
+  // Legacy Spain layers omit country; treat ENAIRE sources as Spain.
+  return (
+    zone.source === "aero" ||
+    zone.source === "urbano" ||
+    zone.source === "infra" ||
+    zone.source === "servais"
+  );
+}
 
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
@@ -31,8 +43,9 @@ function cleanName(zone: MatchedZone): string {
     .trim();
 }
 
-/** Surface aerodrome / hospital ban — no flight without coordination. */
+/** Surface aerodrome / hospital ban — no flight without coordination (Spain). */
 export function isHardNoFlyZone(zone: MatchedZone): boolean {
+  if (!isSpainZone(zone)) return false;
   const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
   const msg = (zone.message ?? "").toUpperCase();
   if (/^[A-Z]{4}0$/.test(id)) return true;
@@ -41,6 +54,7 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
 }
 
 export function isNationalPopulationAdvisory(zone: MatchedZone): boolean {
+  if (!isSpainZone(zone)) return false;
   const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
   if (NATIONAL_POPULATION_IDS.has(id)) return true;
   if (
@@ -58,6 +72,7 @@ export function isNationalPopulationAdvisory(zone: MatchedZone): boolean {
  * (e.g. CTR 60m, LEBB45 45m). Flying below that is effectively clear-with-limits.
  */
 export function isFreeBandZone(zone: MatchedZone): boolean {
+  if (!isSpainZone(zone)) return false;
   if (isHardNoFlyZone(zone) || isNationalPopulationAdvisory(zone)) return false;
   if (!(zone.lowerLimitM > 0)) return false;
   const msg = (zone.message ?? "").toLowerCase();
@@ -139,10 +154,18 @@ function buildSummary(
     return `Flight prohibited without coordination — ${name} (${band}).`;
   }
 
-  if (msg.includes("están permitidas las operaciones vlos") && top.lowerLimitM > 0) {
+  if (
+    isSpainZone(top) &&
+    msg.includes("están permitidas las operaciones vlos") &&
+    top.lowerLimitM > 0
+  ) {
     return `Restricted — VLOS up to ${Math.round(top.lowerLimitM)}m often allowed outside aerodrome zones; auth above (${name}).`;
   }
-  if (msg.includes("no es necesario coordinar") && top.lowerLimitM > 0) {
+  if (
+    isSpainZone(top) &&
+    msg.includes("no es necesario coordinar") &&
+    top.lowerLimitM > 0
+  ) {
     return `Restricted — below ~${Math.round(top.lowerLimitM)}m usually free of aerodrome coordination; auth above (${name}).`;
   }
 

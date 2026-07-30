@@ -1,4 +1,4 @@
-/** Max span (degrees) for zone bbox queries — prevents Spain-wide GeoJSON pulls. */
+/** Max span (degrees) for zone bbox queries — prevents country-wide GeoJSON pulls. */
 export const MAX_ZONE_BBOX_SPAN_DEG = 8;
 export function clampBboxSpan(bbox, maxSpan = MAX_ZONE_BBOX_SPAN_DEG) {
     const lngSpan = bbox.east - bbox.west;

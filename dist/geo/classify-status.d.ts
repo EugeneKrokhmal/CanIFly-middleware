@@ -1,5 +1,5 @@
 import type { MatchedZone, StatusResult } from "./ed318-types.js";
-/** Surface aerodrome / hospital ban — no flight without coordination. */
+/** Surface aerodrome / hospital ban — no flight without coordination (Spain). */
 export declare function isHardNoFlyZone(zone: MatchedZone): boolean;
 export declare function isNationalPopulationAdvisory(zone: MatchedZone): boolean;
 /**

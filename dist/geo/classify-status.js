@@ -1,10 +1,20 @@
-/** Nationwide urban/population overlays — advisory only for open recreational. */
+/** Nationwide urban/population overlays — advisory only for open recreational (Spain). */
 const NATIONAL_POPULATION_IDS = new Set([
     "NPDRID",
     "NPRIAS",
     "NPILLA",
     "NPLONA",
 ]);
+function isSpainZone(zone) {
+    const c = (zone.country ?? "").toUpperCase();
+    if (c === "ES" || c === "ESP")
+        return true;
+    // Legacy Spain layers omit country; treat ENAIRE sources as Spain.
+    return (zone.source === "aero" ||
+        zone.source === "urbano" ||
+        zone.source === "infra" ||
+        zone.source === "servais");
+}
 function restrictionRank(restriction) {
     const r = String(restriction).toUpperCase();
     if (r === "PROHIBITED")
@@ -27,8 +37,10 @@ function cleanName(zone) {
         .replace(/\s+/g, " ")
         .trim();
 }
-/** Surface aerodrome / hospital ban — no flight without coordination. */
+/** Surface aerodrome / hospital ban — no flight without coordination (Spain). */
 export function isHardNoFlyZone(zone) {
+    if (!isSpainZone(zone))
+        return false;
     const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
     const msg = (zone.message ?? "").toUpperCase();
     if (/^[A-Z]{4}0$/.test(id))
@@ -38,6 +50,8 @@ export function isHardNoFlyZone(zone) {
     return false;
 }
 export function isNationalPopulationAdvisory(zone) {
+    if (!isSpainZone(zone))
+        return false;
     const id = zone.identifier.toUpperCase().replace(/\s+/g, "");
     if (NATIONAL_POPULATION_IDS.has(id))
         return true;
@@ -53,6 +67,8 @@ export function isNationalPopulationAdvisory(zone) {
  * (e.g. CTR 60m, LEBB45 45m). Flying below that is effectively clear-with-limits.
  */
 export function isFreeBandZone(zone) {
+    if (!isSpainZone(zone))
+        return false;
     if (isHardNoFlyZone(zone) || isNationalPopulationAdvisory(zone))
         return false;
     if (!(zone.lowerLimitM > 0))
@@ -130,10 +146,14 @@ function buildSummary(status, zones, advisory, freeLimit) {
     if (status === "prohibited") {
         return `Flight prohibited without coordination — ${name} (${band}).`;
     }
-    if (msg.includes("están permitidas las operaciones vlos") && top.lowerLimitM > 0) {
+    if (isSpainZone(top) &&
+        msg.includes("están permitidas las operaciones vlos") &&
+        top.lowerLimitM > 0) {
         return `Restricted — VLOS up to ${Math.round(top.lowerLimitM)}m often allowed outside aerodrome zones; auth above (${name}).`;
     }
-    if (msg.includes("no es necesario coordinar") && top.lowerLimitM > 0) {
+    if (isSpainZone(top) &&
+        msg.includes("no es necesario coordinar") &&
+        top.lowerLimitM > 0) {
         return `Restricted — below ~${Math.round(top.lowerLimitM)}m usually free of aerodrome coordination; auth above (${name}).`;
     }
     const restriction = String(top.restriction).toUpperCase();
