@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `SE` (Sweden / LFV Drönarkarta) with DK↔SE Øresund border heuristic
+- `ZoneSource` value `"lfv"`; hard no-fly for CTR / ATZ / TIZ / RWY5K / heliport buffers
 - Country registry entries `PT` (Portugal / ANAC) and `AT` (Austria / Austro Control) with ES↔PT and AT↔DE/CH/CZ border heuristics
 - `ZoneSource` values `"anac"` / `"austro"`; hard no-fly for Portuguese PROHIBITED/emergency and Austrian AIR_TRAFFIC zones
 - Country registry entry `CH` (Switzerland / FOCA) with CH↔DE / CH↔FR border heuristics

@@ -14,6 +14,9 @@ describe("resolveCountry", () => {
     ["Porto", 41.1579, -8.6291, "PT"],
     ["Vienna", 48.2082, 16.3738, "AT"],
     ["Innsbruck", 47.2692, 11.4041, "AT"],
+    ["Stockholm", 59.3293, 18.0686, "SE"],
+    ["Malmo", 55.605, 13.0038, "SE"],
+    ["Gothenburg", 57.7089, 11.9746, "SE"],
     ["Prague", 50.0755, 14.4378, "CZ"],
     ["Warsaw", 52.2297, 21.0122, "PL"],
   ] as const)("%s → %s", (_name, lat, lng, want) => {
@@ -68,7 +71,12 @@ describe("resolveCountry", () => {
     expect(resolveCountry(47.2692, 11.4041)).toBe("AT"); // Innsbruck
   });
 
+  it("DK↔SE Øresund", () => {
+    expect(resolveCountry(55.6761, 12.5683)).toBe("DK"); // Copenhagen
+    expect(resolveCountry(55.605, 13.0038)).toBe("SE"); // Malmö
+  });
+
   it("outside coverage → null", () => {
-    expect(resolveCountry(60, 10)).toBeNull();
+    expect(resolveCountry(60, 10)).toBeNull(); // Oslo (NO)
   });
 });

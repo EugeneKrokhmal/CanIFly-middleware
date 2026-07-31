@@ -1,5 +1,5 @@
 import type { Bbox } from "./bbox.js";
-export type CountryId = "ES" | "DE" | "FR" | "DK" | "CH" | "PT" | "AT" | "CZ" | "PL";
+export type CountryId = "ES" | "DE" | "FR" | "DK" | "CH" | "PT" | "AT" | "CZ" | "PL" | "SE";
 export interface CountryBounds {
     minLat: number;
     maxLat: number;
@@ -41,6 +41,8 @@ export declare const AUSTRIA_COUNTRY: CountryDefinition;
 export declare const CZECHIA_COUNTRY: CountryDefinition;
 /** Mainland Poland (approx). */
 export declare const POLAND_COUNTRY: CountryDefinition;
+/** Sweden mainland + Gotland / Öland (LFV Drönarkarta WFS). */
+export declare const SWEDEN_COUNTRY: CountryDefinition;
 export declare const COUNTRIES: Record<CountryId, CountryDefinition>;
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre

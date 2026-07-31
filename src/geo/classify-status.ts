@@ -66,6 +66,11 @@ function isAustriaZone(zone: MatchedZone): boolean {
   return c === "AT" || c === "AUT" || zone.source === "austro";
 }
 
+function isSwedenZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "SE" || c === "SWE" || zone.source === "lfv";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -196,6 +201,36 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
         r === "AIR_TRAFFIC" ||
         r.includes("MILITARY") ||
         r.includes("MILITAER"),
+    );
+  }
+  if (isSwedenZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    // CTR / ATZ / TIZ / runway & heliport buffers — open category needs ATC.
+    if (
+      reasons.some(
+        (r) =>
+          r === "CTR" ||
+          r === "ATZ" ||
+          r === "TIZ" ||
+          r === "RW-5K" ||
+          r === "RWY5K" ||
+          r === "HKP1K" ||
+          r === "HKP" ||
+          r.includes("MILITARY") ||
+          r.includes("MILITÄR") ||
+          r.includes("MILITAER"),
+      )
+    ) {
+      return true;
+    }
+    const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+    return (
+      blob.includes(" CTR") ||
+      blob.endsWith("CTR") ||
+      blob.includes("ARLANDA") ||
+      blob.includes("BROMMA") ||
+      blob.includes("LANDVETTER")
     );
   }
   return false;

@@ -178,6 +178,26 @@ export const POLAND_COUNTRY = {
         authorityName: "PANSA",
     },
 };
+/** Sweden mainland + Gotland / Öland (LFV Drönarkarta WFS). */
+export const SWEDEN_COUNTRY = {
+    id: "SE",
+    iso2: "SE",
+    iso3: "SWE",
+    nameEn: "Sweden",
+    nameLocal: "Sverige",
+    center: [15.0, 62.0],
+    bounds: {
+        minLat: 55.2,
+        maxLat: 69.1,
+        minLng: 10.9,
+        maxLng: 24.2,
+    },
+    official: {
+        mapUrl: "https://dronechart.lfv.se/",
+        authorityUrl: "https://daim.lfv.se/echarts/dronechart/API/",
+        authorityName: "LFV / Transportstyrelsen",
+    },
+};
 export const COUNTRIES = {
     ES: SPAIN_COUNTRY,
     DE: GERMANY_COUNTRY,
@@ -188,6 +208,7 @@ export const COUNTRIES = {
     AT: AUSTRIA_COUNTRY,
     CZ: CZECHIA_COUNTRY,
     PL: POLAND_COUNTRY,
+    SE: SWEDEN_COUNTRY,
 };
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
@@ -203,6 +224,7 @@ export const COUNTRY_IDS = [
     "AT",
     "CZ",
     "PL",
+    "SE",
 ];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&
@@ -326,6 +348,16 @@ export function resolveCountry(lat, lng) {
         if (lat <= 54.8)
             return "DE";
         return lng >= 9.2 ? "DK" : "DE";
+    }
+    if (hits.includes("DK") && hits.includes("SE")) {
+        // Gothenburg / Bohuslän sits in the DK AABB (maxLat 57.8) but is Swedish.
+        // Danish Skagen (~10.6°E) is west of the SE AABB, so lat≥57.2 in the
+        // overlap is Swedish west coast. Øresund: east of ~12.7° → Malmö (SE).
+        if (lat >= 57.2)
+            return "SE";
+        if (lng >= 12.7)
+            return "SE";
+        return "DK";
     }
     if (hits.includes("CZ") && hits.includes("PL")) {
         return "CZ";

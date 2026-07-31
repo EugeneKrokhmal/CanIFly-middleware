@@ -5,6 +5,7 @@ export declare const DENMARK_CENTER: [number, number];
 export declare const SWITZERLAND_CENTER: [number, number];
 export declare const PORTUGAL_CENTER: [number, number];
 export declare const AUSTRIA_CENTER: [number, number];
+export declare const SWEDEN_CENTER: [number, number];
 export declare const CZECHIA_CENTER: [number, number];
 export declare const POLAND_CENTER: [number, number];
 export declare const DEFAULT_ZOOM = 6;

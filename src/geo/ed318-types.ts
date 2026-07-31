@@ -24,7 +24,8 @@ export type ZoneSource =
   | "dronezoner"
   | "foca"
   | "anac"
-  | "austro";
+  | "austro"
+  | "lfv";
 
 export interface ScheduleEntry {
   day: string[];
