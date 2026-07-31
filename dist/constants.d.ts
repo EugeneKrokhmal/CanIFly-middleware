@@ -10,7 +10,12 @@ export declare const IRELAND_CENTER: [number, number];
 export declare const LATVIA_CENTER: [number, number];
 export declare const CZECHIA_CENTER: [number, number];
 export declare const POLAND_CENTER: [number, number];
-export declare const DEFAULT_ZOOM = 6;
+/**
+ * Initial / country-frame zoom. Must stay high enough that a pitched desktop
+ * viewport is ≤ ~7° (API bbox clamp) so restricted zones paint on first load.
+ * Zoom 6 spans ~13°+ and returns an empty FeatureCollection.
+ */
+export declare const DEFAULT_ZOOM = 9;
 export declare const DEFAULT_DRONE_PROFILE: {
     weightClass: "c0";
     operationCategory: "open";
