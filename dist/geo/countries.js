@@ -198,6 +198,26 @@ export const SWEDEN_COUNTRY = {
         authorityName: "LFV / Transportstyrelsen",
     },
 };
+/** Ireland incl. nearby islands (IAA UAS geographical zones GeoJSON). */
+export const IRELAND_COUNTRY = {
+    id: "IE",
+    iso2: "IE",
+    iso3: "IRL",
+    nameEn: "Ireland",
+    nameLocal: "Éire",
+    center: [-6.26, 53.35],
+    bounds: {
+        minLat: 51.3,
+        maxLat: 55.5,
+        minLng: -10.7,
+        maxLng: -5.3,
+    },
+    official: {
+        mapUrl: "https://www.iaa.ie/general-aviation/drones/uas-geographic-zones",
+        authorityUrl: "https://www.iaa.ie/general-aviation/drones/uas-geographic-zones",
+        authorityName: "IAA",
+    },
+};
 export const COUNTRIES = {
     ES: SPAIN_COUNTRY,
     DE: GERMANY_COUNTRY,
@@ -209,6 +229,7 @@ export const COUNTRIES = {
     CZ: CZECHIA_COUNTRY,
     PL: POLAND_COUNTRY,
     SE: SWEDEN_COUNTRY,
+    IE: IRELAND_COUNTRY,
 };
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
@@ -225,6 +246,7 @@ export const COUNTRY_IDS = [
     "CZ",
     "PL",
     "SE",
+    "IE",
 ];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&

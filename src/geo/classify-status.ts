@@ -71,6 +71,11 @@ function isSwedenZone(zone: MatchedZone): boolean {
   return c === "SE" || c === "SWE" || zone.source === "lfv";
 }
 
+function isIrelandZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "IE" || c === "IRL" || zone.source === "iaa";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -232,6 +237,29 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
       blob.includes("BROMMA") ||
       blob.includes("LANDVETTER")
     );
+  }
+  if (isIrelandZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    if (
+      reasons.some(
+        (r) =>
+          r === "AIR_TRAFFIC" ||
+          r === "SENSITIVE" ||
+          r.includes("MILITARY") ||
+          r.includes("SECURITY"),
+      )
+    ) {
+      const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+      // CTR / Red airport / prisons — treat as hard no-fly for open category.
+      return (
+        blob.includes("CTR") ||
+        blob.includes("RED ZONE") ||
+        blob.includes("PRISON") ||
+        blob.includes("AIRPORT")
+      );
+    }
+    return false;
   }
   return false;
 }

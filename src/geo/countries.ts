@@ -10,7 +10,8 @@ export type CountryId =
   | "AT"
   | "CZ"
   | "PL"
-  | "SE";
+  | "SE"
+  | "IE";
 
 export interface CountryBounds {
   minLat: number;
@@ -250,6 +251,27 @@ export const SWEDEN_COUNTRY: CountryDefinition = {
   },
 };
 
+/** Ireland incl. nearby islands (IAA UAS geographical zones GeoJSON). */
+export const IRELAND_COUNTRY: CountryDefinition = {
+  id: "IE",
+  iso2: "IE",
+  iso3: "IRL",
+  nameEn: "Ireland",
+  nameLocal: "Éire",
+  center: [-6.26, 53.35],
+  bounds: {
+    minLat: 51.3,
+    maxLat: 55.5,
+    minLng: -10.7,
+    maxLng: -5.3,
+  },
+  official: {
+    mapUrl: "https://www.iaa.ie/general-aviation/drones/uas-geographic-zones",
+    authorityUrl: "https://www.iaa.ie/general-aviation/drones/uas-geographic-zones",
+    authorityName: "IAA",
+  },
+};
+
 export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   ES: SPAIN_COUNTRY,
   DE: GERMANY_COUNTRY,
@@ -261,6 +283,7 @@ export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   CZ: CZECHIA_COUNTRY,
   PL: POLAND_COUNTRY,
   SE: SWEDEN_COUNTRY,
+  IE: IRELAND_COUNTRY,
 };
 
 /**
@@ -278,6 +301,7 @@ export const COUNTRY_IDS: CountryId[] = [
   "CZ",
   "PL",
   "SE",
+  "IE",
 ];
 
 export function pointInBounds(

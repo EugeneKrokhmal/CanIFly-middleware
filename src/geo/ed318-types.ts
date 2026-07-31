@@ -25,7 +25,8 @@ export type ZoneSource =
   | "foca"
   | "anac"
   | "austro"
-  | "lfv";
+  | "lfv"
+  | "iaa";
 
 export interface ScheduleEntry {
   day: string[];

@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `IE` (Ireland / IAA) — no border overlap with current coverage
+- `ZoneSource` value `"iaa"`; hard no-fly for PROHIBITED / CTR / prison / airport Red zones
 - Country registry entry `SE` (Sweden / LFV Drönarkarta) with DK↔SE Øresund border heuristic
 - `ZoneSource` value `"lfv"`; hard no-fly for CTR / ATZ / TIZ / RWY5K / heliport buffers
 - Country registry entries `PT` (Portugal / ANAC) and `AT` (Austria / Austro Control) with ES↔PT and AT↔DE/CH/CZ border heuristics
