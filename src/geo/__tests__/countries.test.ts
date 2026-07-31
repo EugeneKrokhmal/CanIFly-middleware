@@ -19,6 +19,8 @@ describe("resolveCountry", () => {
     ["Gothenburg", 57.7089, 11.9746, "SE"],
     ["Dublin", 53.3498, -6.2603, "IE"],
     ["Cork", 51.8985, -8.4756, "IE"],
+    ["Riga", 56.9496, 24.1052, "LV"],
+    ["Liepaja", 56.5047, 21.0107, "LV"],
     ["Prague", 50.0755, 14.4378, "CZ"],
     ["Warsaw", 52.2297, 21.0122, "PL"],
   ] as const)("%s → %s", (_name, lat, lng, want) => {

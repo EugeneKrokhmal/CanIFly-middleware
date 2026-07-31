@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Country registry entry `LV` (Latvia / LGS) with SE↔LV Baltic AABB tip heuristic
+- `ZoneSource` value `"lgs"`; hard no-fly for PROHIBITED / ATZ / CTR / Riga airport zones
 - Country registry entry `IE` (Ireland / IAA) — no border overlap with current coverage
 - `ZoneSource` value `"iaa"`; hard no-fly for PROHIBITED / CTR / prison / airport Red zones
 - Country registry entry `SE` (Sweden / LFV Drönarkarta) with DK↔SE Øresund border heuristic

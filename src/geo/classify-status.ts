@@ -76,6 +76,11 @@ function isIrelandZone(zone: MatchedZone): boolean {
   return c === "IE" || c === "IRL" || zone.source === "iaa";
 }
 
+function isLatviaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "LV" || c === "LVA" || zone.source === "lgs";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -257,6 +262,29 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
         blob.includes("RED ZONE") ||
         blob.includes("PRISON") ||
         blob.includes("AIRPORT")
+      );
+    }
+    return false;
+  }
+  if (isLatviaZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    if (
+      reasons.some(
+        (r) =>
+          r === "AIR_TRAFFIC" ||
+          r === "SENSITIVE" ||
+          r.includes("MILITARY") ||
+          r.includes("SECURITY"),
+      )
+    ) {
+      const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+      return (
+        blob.includes("ATZ") ||
+        blob.includes("CTR") ||
+        blob.includes("AIRPORT") ||
+        blob.includes("RIGA") ||
+        blob.includes("EVRA")
       );
     }
     return false;

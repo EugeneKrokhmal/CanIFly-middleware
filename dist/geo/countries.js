@@ -218,6 +218,26 @@ export const IRELAND_COUNTRY = {
         authorityName: "IAA",
     },
 };
+/** Latvia (LGS / drz.lv ED-269 UAS geozones). */
+export const LATVIA_COUNTRY = {
+    id: "LV",
+    iso2: "LV",
+    iso3: "LVA",
+    nameEn: "Latvia",
+    nameLocal: "Latvija",
+    center: [24.1, 56.95],
+    bounds: {
+        minLat: 55.6,
+        maxLat: 58.1,
+        minLng: 20.9,
+        maxLng: 28.3,
+    },
+    official: {
+        mapUrl: "https://www.airspace.lv/drones/",
+        authorityUrl: "https://ais.lgs.lv/page/UAS_geozones",
+        authorityName: "LGS / CAA Latvia",
+    },
+};
 export const COUNTRIES = {
     ES: SPAIN_COUNTRY,
     DE: GERMANY_COUNTRY,
@@ -230,6 +250,7 @@ export const COUNTRIES = {
     PL: POLAND_COUNTRY,
     SE: SWEDEN_COUNTRY,
     IE: IRELAND_COUNTRY,
+    LV: LATVIA_COUNTRY,
 };
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre
@@ -247,6 +268,7 @@ export const COUNTRY_IDS = [
     "PL",
     "SE",
     "IE",
+    "LV",
 ];
 export function pointInBounds(lat, lng, bounds) {
     return (lat >= bounds.minLat &&
@@ -380,6 +402,12 @@ export function resolveCountry(lat, lng) {
         if (lng >= 12.7)
             return "SE";
         return "DK";
+    }
+    if (hits.includes("SE") && hits.includes("LV")) {
+        // Baltic AABB tip — east of ~21° closer to Latvia, west stays Sweden.
+        if (lng >= 21.0)
+            return "LV";
+        return "SE";
     }
     if (hits.includes("CZ") && hits.includes("PL")) {
         return "CZ";

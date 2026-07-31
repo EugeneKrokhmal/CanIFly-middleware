@@ -8,6 +8,7 @@ import {
   SPAIN_COUNTRY,
   SWEDEN_COUNTRY,
   IRELAND_COUNTRY,
+  LATVIA_COUNTRY,
   SWITZERLAND_COUNTRY,
 } from "./geo/countries.js";
 
@@ -20,6 +21,7 @@ export const PORTUGAL_CENTER: [number, number] = PORTUGAL_COUNTRY.center;
 export const AUSTRIA_CENTER: [number, number] = AUSTRIA_COUNTRY.center;
 export const SWEDEN_CENTER: [number, number] = SWEDEN_COUNTRY.center;
 export const IRELAND_CENTER: [number, number] = IRELAND_COUNTRY.center;
+export const LATVIA_CENTER: [number, number] = LATVIA_COUNTRY.center;
 export const CZECHIA_CENTER: [number, number] = COUNTRIES.CZ.center;
 export const POLAND_CENTER: [number, number] = COUNTRIES.PL.center;
 export const DEFAULT_ZOOM = 6;
