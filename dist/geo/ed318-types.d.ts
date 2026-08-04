@@ -55,6 +55,51 @@ export interface DroneProfile {
     operationCategory: OperationCategory;
     maxAltitudeAgl: number;
 }
+/** Normalized contact for any national UAS zone provider. */
+export interface ZoneContact {
+    role?: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+    url?: string;
+}
+/** Time window within zone applicability (schedule or validity). */
+export interface ZoneTimeWindow {
+    start?: string;
+    end?: string;
+    days?: string[];
+    startTime?: string;
+    endTime?: string;
+}
+/** When a zone applies (permanent, date range, or recurring schedule). */
+export interface ZoneApplicability {
+    permanent?: boolean;
+    validFrom?: string;
+    validTo?: string;
+    schedule?: ZoneTimeWindow[];
+}
+/** Provider-specific metadata kept for display and future mappers. */
+export interface ZonePublisherMeta {
+    variant?: string;
+    regulationExemption?: string;
+    purpose?: string;
+    region?: string;
+    category?: string;
+    updatedAt?: string;
+    extras?: Record<string, string>;
+}
+/**
+ * Enriched zone details in a common shape across ENAIRE, dipul, geopf, pansa, etc.
+ * Scalar fields on MatchedZone stay the source of truth for classify/filter logic.
+ */
+export interface ZoneEnrichment {
+    contacts: ZoneContact[];
+    applicability?: ZoneApplicability;
+    guidance?: string;
+    guidanceHtml?: string;
+    publisher?: ZonePublisherMeta;
+    altitudeNotes?: string[];
+}
 export interface MatchedZone {
     identifier: string;
     name: string;
@@ -67,8 +112,11 @@ export interface MatchedZone {
     upperLimitM: number;
     lowerRef: VerticalReference;
     upperRef: VerticalReference;
+    /** Primary contact (usually first authority email). Kept for backward compatibility. */
     contact?: string;
     message?: string;
+    /** Optional provider-specific details normalized to a common format. */
+    enrichment?: ZoneEnrichment;
 }
 export type AirspaceStatus = "clear" | "limited" | "restricted" | "prohibited";
 export interface StatusResult {
