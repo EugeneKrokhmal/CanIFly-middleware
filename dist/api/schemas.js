@@ -16,6 +16,24 @@ export const authRegisterSchema = authCredentialsSchema.extend({
         .nullable()
         .transform((v) => (v && v.length > 0 ? v : null)),
     locale: appLocaleSchema.optional().default("es"),
+    /** Unchecked by default — marketing email opt-in (GDPR). */
+    marketingOptIn: z.boolean().optional().default(false),
+    /** Required — Terms + Privacy acceptance. */
+    acceptTerms: z.literal(true, {
+        error: "You must accept the Terms and Privacy Policy",
+    }),
+});
+export const updateMarketingOptInSchema = z.object({
+    marketingOptIn: z.boolean(),
+});
+export const contactFormSchema = z.object({
+    name: z.string().trim().min(2).max(80),
+    email: z.string().trim().email().max(254),
+    category: z.enum(["suggestion", "complaint", "other"]).default("suggestion"),
+    message: z.string().trim().min(10).max(4000),
+    /** Honeypot — bots fill this; humans leave it empty. */
+    website: z.string().max(200).optional().default(""),
+    locale: appLocaleSchema.optional(),
 });
 export const authEmailSchema = z.object({
     email: z.string().trim().email().max(254),

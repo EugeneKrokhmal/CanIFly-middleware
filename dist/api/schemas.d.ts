@@ -29,6 +29,30 @@ export declare const authRegisterSchema: z.ZodObject<{
         pl: "pl";
         cs: "cs";
     }>>>;
+    marketingOptIn: z.ZodDefault<z.ZodOptional<z.ZodBoolean>>;
+    acceptTerms: z.ZodLiteral<true>;
+}, z.core.$strip>;
+export declare const updateMarketingOptInSchema: z.ZodObject<{
+    marketingOptIn: z.ZodBoolean;
+}, z.core.$strip>;
+export declare const contactFormSchema: z.ZodObject<{
+    name: z.ZodString;
+    email: z.ZodString;
+    category: z.ZodDefault<z.ZodEnum<{
+        suggestion: "suggestion";
+        complaint: "complaint";
+        other: "other";
+    }>>;
+    message: z.ZodString;
+    website: z.ZodDefault<z.ZodOptional<z.ZodString>>;
+    locale: z.ZodOptional<z.ZodEnum<{
+        es: "es";
+        en: "en";
+        de: "de";
+        fr: "fr";
+        pl: "pl";
+        cs: "cs";
+    }>>;
 }, z.core.$strip>;
 export declare const authEmailSchema: z.ZodObject<{
     email: z.ZodString;
@@ -61,6 +85,7 @@ export declare const pinKindSchema: z.ZodEnum<{
     fly_spot: "fly_spot";
 }>;
 export declare const obstacleTypeSchema: z.ZodEnum<{
+    other: "other";
     construction: "construction";
     crane: "crane";
     electric_line: "electric_line";
@@ -69,7 +94,6 @@ export declare const obstacleTypeSchema: z.ZodEnum<{
     rooftop: "rooftop";
     field: "field";
     beach: "beach";
-    other: "other";
 }>;
 export declare const obstacleVoteSchema: z.ZodObject<{
     value: z.ZodNullable<z.ZodEnum<{
@@ -83,6 +107,7 @@ export declare const createObstacleSchema: z.ZodObject<{
         fly_spot: "fly_spot";
     }>>;
     type: z.ZodEnum<{
+        other: "other";
         construction: "construction";
         crane: "crane";
         electric_line: "electric_line";
@@ -91,7 +116,6 @@ export declare const createObstacleSchema: z.ZodObject<{
         rooftop: "rooftop";
         field: "field";
         beach: "beach";
-        other: "other";
     }>;
     lat: z.ZodNumber;
     lng: z.ZodNumber;
