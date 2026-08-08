@@ -8,7 +8,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./pilot/rank": {
+      "types": "./dist/pilot/rank.d.ts",
+      "import": "./dist/pilot/rank.js",
+      "default": "./dist/pilot/rank.js"
     }
   },
   "scripts": {

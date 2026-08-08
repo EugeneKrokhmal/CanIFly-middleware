@@ -8,4 +8,19 @@ export * from "./geo/filter-by-profile.js";
 export * from "./geo/normalize-slices.js";
 export * from "./geo/zone-enrichment/index.js";
 export * from "./i18n/labels.js";
-export * from "./pilot/rank.js";
+export {
+  BADGE_HOURS_BONUS,
+  MAX_RANK_INDEX,
+  PILOT_RANKS,
+  computePilotProgress,
+  computePilotXp,
+  effectiveRankHours,
+  hoursFromDurationS,
+  levelFromXp,
+  rankDefById,
+  rankFromHours,
+  type PilotRankDef,
+  type PilotRankId,
+  type PilotRankStats,
+  type RankInsignia,
+} from "./pilot/rank.js";
