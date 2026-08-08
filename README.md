@@ -1,11 +1,11 @@
 # `@canifly/middleware`
 
-Shared **TypeScript library** for CanIFly: Zod API schemas, UAS/ED-318 types, bbox helpers, **airspace status classification**, profile/map filters, and **EN/ES domain labels**.
+Shared **TypeScript library** for CanIFly: Zod API schemas, UAS/ED-318 types, bbox helpers, **airspace status classification**, profile/map filters, **pilot rank progression**, and **EN/ES (+ DE/FR/PL/CS) domain labels**.
 
 Consumed by:
 
-- [`CanIFly-api`](https://github.com/EugeneKrokhmal/CanIFly-api) — validate requests, classify status, filter zones
-- [`CanIFly`](https://github.com/EugeneKrokhmal/CanIFly) — types, constants, labels, client-side helpers where needed
+- [`CanIFly-api`](https://github.com/EugeneKrokhmal/CanIFly-api) — validate requests, classify status, filter zones, score pilots
+- [`CanIFly`](https://github.com/EugeneKrokhmal/CanIFly) — types, constants, labels, rank ladder, client-side helpers where needed
 
 This package has **no Nest/Hono/Next dependency** — only Zod (+ Vitest for tests).
 
@@ -71,6 +71,16 @@ isObstacleInactive(likes, dislikes) // dislikes / total > 0.5
 
 Shared so map dimming and API agree.
 
+### Pilot ranks
+
+`src/pilot/rank.ts` — single source of truth for aviation epaulette ranks:
+
+- Ladder `PILOT_RANKS` (Student Pilot → Instructor) with insignia defs (bars / command marks)
+- `effectiveRankHours` — airtime + boosts (flights, distance, pins, fly spots, badges, operator)
+- `computePilotProgress` / `rankFromHours` / `rankDefById`
+
+Web and API must not fork this formula. UI (SVG epaulettes, CSS) stays in CanIFly.
+
 ### Packaging
 
 - `"type": "module"` — ESM `dist/`
@@ -87,12 +97,14 @@ CanIFly-middleware/
 │   ├── index.ts                 # public barrel
 │   ├── constants.ts             # Spain bounds, ED318 sources, servAIS, map colors
 │   ├── api/schemas.ts           # Zod: status query, profiles, obstacles, …
+│   ├── pilot/rank.ts            # aviation rank ladder + effective hours
 │   ├── geo/
 │   │   ├── ed318-types.ts       # UasZone, MatchedZone, AirspaceStatus, …
 │   │   ├── classify-status.ts   # Clear / Limited / Restricted / Prohibited
 │   │   ├── filter-by-profile.ts # status + map filters
 │   │   ├── normalize-slices.ts  # ArcGIS/ED-318 → internal geometry
 │   │   ├── bbox.ts
+│   │   ├── countries.ts         # coverage registry
 │   │   └── __tests__/           # Vitest scenarios
 │   └── i18n/labels.ts           # statusLabel, obstacleLabel, parseLocale, …
 ├── dist/                        # build output (committed or built in CI)
@@ -106,7 +118,8 @@ From `src/index.ts`:
 
 - `constants`
 - `api/schemas`
-- `geo/ed318-types`, `bbox`, `classify-status`, `filter-by-profile`, `normalize-slices`
+- `pilot/rank` — `PILOT_RANKS`, `computePilotProgress`, …
+- `geo/ed318-types`, `bbox`, `countries`, `classify-status`, `filter-by-profile`, `normalize-slices`
 - `i18n/labels`
 
 ---
@@ -133,8 +146,10 @@ import {
   pointStatusQuerySchema,
   openCategoryCeiling,
   classifyStatus,
+  computePilotProgress,
   parseLocale,
   type DroneProfile,
+  type PilotRankStats,
 } from "@canifly/middleware";
 ```
 

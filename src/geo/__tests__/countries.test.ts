@@ -21,6 +21,14 @@ describe("resolveCountry", () => {
     ["Cork", 51.8985, -8.4756, "IE"],
     ["Riga", 56.9496, 24.1052, "LV"],
     ["Liepaja", 56.5047, 21.0107, "LV"],
+    ["Vilnius", 54.6872, 25.2797, "LT"],
+    ["Kaunas", 54.8985, 23.9036, "LT"],
+    ["Tallinn", 59.437, 24.7536, "EE"],
+    ["Tartu", 58.378, 26.729, "EE"],
+    ["Bratislava", 48.1486, 17.1077, "SK"],
+    ["Kosice", 48.7164, 21.2611, "SK"],
+    ["Ljubljana", 46.0569, 14.5058, "SI"],
+    ["Maribor", 46.5547, 15.6459, "SI"],
     ["Prague", 50.0755, 14.4378, "CZ"],
     ["Warsaw", 52.2297, 21.0122, "PL"],
   ] as const)("%s → %s", (_name, lat, lng, want) => {
@@ -78,6 +86,22 @@ describe("resolveCountry", () => {
   it("DK↔SE Øresund", () => {
     expect(resolveCountry(55.6761, 12.5683)).toBe("DK"); // Copenhagen
     expect(resolveCountry(55.605, 13.0038)).toBe("SE"); // Malmö
+  });
+
+  it("Baltic LV↔LT↔EE", () => {
+    expect(resolveCountry(56.95, 24.1)).toBe("LV"); // Riga
+    expect(resolveCountry(54.69, 25.28)).toBe("LT"); // Vilnius
+    expect(resolveCountry(59.44, 24.75)).toBe("EE"); // Tallinn
+    expect(resolveCountry(55.93, 23.31)).toBe("LT"); // Šiauliai
+    expect(resolveCountry(56.65, 23.71)).toBe("LV"); // Jelgava
+    expect(resolveCountry(57.7, 24.5)).toBe("EE"); // south EE / Valga area
+  });
+
+  it("AT↔SK / AT↔SI", () => {
+    expect(resolveCountry(48.15, 17.11)).toBe("SK"); // Bratislava
+    expect(resolveCountry(48.21, 16.37)).toBe("AT"); // Vienna
+    expect(resolveCountry(46.05, 14.51)).toBe("SI"); // Ljubljana
+    expect(resolveCountry(46.7, 14.3)).toBe("AT"); // Klagenfurt area north of SI
   });
 
   it("outside coverage → null", () => {

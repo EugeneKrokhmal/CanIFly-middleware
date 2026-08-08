@@ -27,7 +27,11 @@ export type ZoneSource =
   | "austro"
   | "lfv"
   | "iaa"
-  | "lgs";
+  | "lgs"
+  | "anslt"
+  | "eans"
+  | "nsat"
+  | "caasi";
 
 export interface ScheduleEntry {
   day: string[];

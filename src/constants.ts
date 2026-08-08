@@ -9,6 +9,10 @@ import {
   SWEDEN_COUNTRY,
   IRELAND_COUNTRY,
   LATVIA_COUNTRY,
+  LITHUANIA_COUNTRY,
+  ESTONIA_COUNTRY,
+  SLOVAKIA_COUNTRY,
+  SLOVENIA_COUNTRY,
   SWITZERLAND_COUNTRY,
 } from "./geo/countries.js";
 
@@ -22,6 +26,10 @@ export const AUSTRIA_CENTER: [number, number] = AUSTRIA_COUNTRY.center;
 export const SWEDEN_CENTER: [number, number] = SWEDEN_COUNTRY.center;
 export const IRELAND_CENTER: [number, number] = IRELAND_COUNTRY.center;
 export const LATVIA_CENTER: [number, number] = LATVIA_COUNTRY.center;
+export const LITHUANIA_CENTER: [number, number] = LITHUANIA_COUNTRY.center;
+export const ESTONIA_CENTER: [number, number] = ESTONIA_COUNTRY.center;
+export const SLOVAKIA_CENTER: [number, number] = SLOVAKIA_COUNTRY.center;
+export const SLOVENIA_CENTER: [number, number] = SLOVENIA_COUNTRY.center;
 export const CZECHIA_CENTER: [number, number] = COUNTRIES.CZ.center;
 export const POLAND_CENTER: [number, number] = COUNTRIES.PL.center;
 /**

@@ -1,5 +1,5 @@
 import type { Bbox } from "./bbox.js";
-export type CountryId = "ES" | "DE" | "FR" | "DK" | "CH" | "PT" | "AT" | "CZ" | "PL" | "SE" | "IE" | "LV";
+export type CountryId = "ES" | "DE" | "FR" | "DK" | "CH" | "PT" | "AT" | "CZ" | "PL" | "SE" | "IE" | "LV" | "LT" | "EE" | "SK" | "SI";
 export interface CountryBounds {
     minLat: number;
     maxLat: number;
@@ -47,6 +47,14 @@ export declare const SWEDEN_COUNTRY: CountryDefinition;
 export declare const IRELAND_COUNTRY: CountryDefinition;
 /** Latvia (LGS / drz.lv ED-269 UAS geozones). */
 export declare const LATVIA_COUNTRY: CountryDefinition;
+/** Lithuania (Oro navigacija UTM AVM GeoJSON). */
+export declare const LITHUANIA_COUNTRY: CountryDefinition;
+/** Estonia (EANS / Transpordiamet UTM AVM GeoJSON). */
+export declare const ESTONIA_COUNTRY: CountryDefinition;
+/** Slovakia (NSAT / Dopravný úrad KML geozones). */
+export declare const SLOVAKIA_COUNTRY: CountryDefinition;
+/** Slovenia (CAA SI KML/KMZ geozones). */
+export declare const SLOVENIA_COUNTRY: CountryDefinition;
 export declare const COUNTRIES: Record<CountryId, CountryDefinition>;
 /**
  * Registration order for bbox fan-out. Point resolution uses nearest-centre

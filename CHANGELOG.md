@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Pilot rank progression (`src/pilot/rank.ts`): epaulette ladder Student → Instructor, `effectiveRankHours`, `computePilotProgress`
 - Country registry entry `LV` (Latvia / LGS) with SE↔LV Baltic AABB tip heuristic
 - `ZoneSource` value `"lgs"`; hard no-fly for PROHIBITED / ATZ / CTR / Riga airport zones
 - Country registry entry `IE` (Ireland / IAA) — no border overlap with current coverage

@@ -8,6 +8,10 @@ export declare const AUSTRIA_CENTER: [number, number];
 export declare const SWEDEN_CENTER: [number, number];
 export declare const IRELAND_CENTER: [number, number];
 export declare const LATVIA_CENTER: [number, number];
+export declare const LITHUANIA_CENTER: [number, number];
+export declare const ESTONIA_CENTER: [number, number];
+export declare const SLOVAKIA_CENTER: [number, number];
+export declare const SLOVENIA_CENTER: [number, number];
 export declare const CZECHIA_CENTER: [number, number];
 export declare const POLAND_CENTER: [number, number];
 /**

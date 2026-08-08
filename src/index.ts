@@ -8,3 +8,4 @@ export * from "./geo/filter-by-profile.js";
 export * from "./geo/normalize-slices.js";
 export * from "./geo/zone-enrichment/index.js";
 export * from "./i18n/labels.js";
+export * from "./pilot/rank.js";

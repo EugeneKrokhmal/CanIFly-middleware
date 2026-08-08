@@ -12,7 +12,11 @@ export type CountryId =
   | "PL"
   | "SE"
   | "IE"
-  | "LV";
+  | "LV"
+  | "LT"
+  | "EE"
+  | "SK"
+  | "SI";
 
 export interface CountryBounds {
   minLat: number;
@@ -294,6 +298,91 @@ export const LATVIA_COUNTRY: CountryDefinition = {
   },
 };
 
+/** Lithuania (Oro navigacija UTM AVM GeoJSON). */
+export const LITHUANIA_COUNTRY: CountryDefinition = {
+  id: "LT",
+  iso2: "LT",
+  iso3: "LTU",
+  nameEn: "Lithuania",
+  nameLocal: "Lietuva",
+  center: [23.9, 55.2],
+  bounds: {
+    minLat: 53.85,
+    maxLat: 56.5,
+    minLng: 20.9,
+    maxLng: 26.9,
+  },
+  official: {
+    mapUrl: "https://utm.ans.lt/avm/",
+    authorityUrl: "https://www.ans.lt/",
+    authorityName: "Oro navigacija",
+  },
+};
+
+/** Estonia (EANS / Transpordiamet UTM AVM GeoJSON). */
+export const ESTONIA_COUNTRY: CountryDefinition = {
+  id: "EE",
+  iso2: "EE",
+  iso3: "EST",
+  nameEn: "Estonia",
+  nameLocal: "Eesti",
+  center: [25.0, 58.6],
+  bounds: {
+    minLat: 57.5,
+    maxLat: 59.75,
+    minLng: 21.7,
+    maxLng: 28.3,
+  },
+  official: {
+    mapUrl: "https://utm.eans.ee/avm/",
+    authorityUrl:
+      "https://www.transpordiamet.ee/en/aviation-and-aviation-safety/flying-drones-estonia/geographical-zones",
+    authorityName: "EANS / Transpordiamet",
+  },
+};
+
+/** Slovakia (NSAT / Dopravný úrad KML geozones). */
+export const SLOVAKIA_COUNTRY: CountryDefinition = {
+  id: "SK",
+  iso2: "SK",
+  iso3: "SVK",
+  nameEn: "Slovakia",
+  nameLocal: "Slovensko",
+  center: [19.5, 48.7],
+  bounds: {
+    minLat: 47.7,
+    maxLat: 49.65,
+    minLng: 16.8,
+    maxLng: 22.6,
+  },
+  official: {
+    mapUrl: "https://letectvo.nsat.sk/en/unmanned-aviation/geo-zones/",
+    authorityUrl: "https://letectvo.nsat.sk/en/unmanned-aviation/geo-zones/",
+    authorityName: "NSAT / Dopravný úrad",
+  },
+};
+
+/** Slovenia (CAA SI KML/KMZ geozones). */
+export const SLOVENIA_COUNTRY: CountryDefinition = {
+  id: "SI",
+  iso2: "SI",
+  iso3: "SVN",
+  nameEn: "Slovenia",
+  nameLocal: "Slovenija",
+  center: [14.5, 46.05],
+  bounds: {
+    minLat: 45.4,
+    maxLat: 46.9,
+    minLng: 13.35,
+    maxLng: 16.6,
+  },
+  official: {
+    mapUrl: "https://www.caa.si/en/geographical-restrictions-for-uas.html",
+    authorityUrl: "https://www.caa.si/en/geographical-restrictions-for-uas.html",
+    authorityName: "CAA Slovenia",
+  },
+};
+
 export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   ES: SPAIN_COUNTRY,
   DE: GERMANY_COUNTRY,
@@ -307,6 +396,10 @@ export const COUNTRIES: Record<CountryId, CountryDefinition> = {
   SE: SWEDEN_COUNTRY,
   IE: IRELAND_COUNTRY,
   LV: LATVIA_COUNTRY,
+  LT: LITHUANIA_COUNTRY,
+  EE: ESTONIA_COUNTRY,
+  SK: SLOVAKIA_COUNTRY,
+  SI: SLOVENIA_COUNTRY,
 };
 
 /**
@@ -326,6 +419,10 @@ export const COUNTRY_IDS: CountryId[] = [
   "SE",
   "IE",
   "LV",
+  "LT",
+  "EE",
+  "SK",
+  "SI",
 ];
 
 export function pointInBounds(
@@ -445,10 +542,50 @@ export function resolveCountry(lat: number, lng: number): CountryId | null {
     if (lng >= 12.7) return "SE";
     return "DK";
   }
+  if (hits.includes("LV") && hits.includes("LT")) {
+    // Rough Latvia / Lithuania border ~56.15°N.
+    if (lat >= 56.15) return "LV";
+    return "LT";
+  }
+  if (hits.includes("LV") && hits.includes("EE")) {
+    // Rough Latvia / Estonia border ~57.55°N.
+    if (lat >= 57.55) return "EE";
+    return "LV";
+  }
+  if (hits.includes("EE") && hits.includes("LT")) {
+    // Should be rare (gap via LV); prefer nearer centre.
+    return dist2ToCenter(lat, lng, COUNTRIES.EE.center) <
+      dist2ToCenter(lat, lng, COUNTRIES.LT.center)
+      ? "EE"
+      : "LT";
+  }
   if (hits.includes("SE") && hits.includes("LV")) {
     // Baltic AABB tip — east of ~21° closer to Latvia, west stays Sweden.
+    // (LV↔LT / LV↔EE handled above so Lithuanian points in the SE AABB stay LT.)
     if (lng >= 21.0) return "LV";
     return "SE";
+  }
+  if (hits.includes("AT") && hits.includes("SK")) {
+    // Bratislava tip / Marchfeld: east of ~16.95° and south of ~48.3° → SK.
+    if (lng >= 16.95 && lat <= 48.35) return "SK";
+    if (lng >= 17.1) return "SK";
+    return "AT";
+  }
+  if (hits.includes("CZ") && hits.includes("SK")) {
+    // White Carpathians / Morava: south-east of ~48.9°N / east of ~17.5° → SK.
+    if (lat <= 48.9 && lng >= 17.3) return "SK";
+    if (lng >= 18.0) return "SK";
+    return "CZ";
+  }
+  if (hits.includes("PL") && hits.includes("SK")) {
+    // High Tatras: south of ~49.4° → SK.
+    if (lat <= 49.4) return "SK";
+    return "PL";
+  }
+  if (hits.includes("AT") && hits.includes("SI")) {
+    // Karawanks / Styria: south of ~46.65° → SI (covers Maribor).
+    if (lat <= 46.65) return "SI";
+    return "AT";
   }
   if (hits.includes("CZ") && hits.includes("PL")) {
     return "CZ";

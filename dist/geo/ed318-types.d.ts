@@ -2,7 +2,7 @@
 export type UasRestriction = "PROHIBITED" | "REQ_AUTHORISATION" | "CONDITIONAL" | "NO_RESTRICTION" | "USPACE" | string;
 export type VerticalReference = "AGL" | "AMSL" | "W84" | string;
 export type UomDimensions = "M" | "FT" | string;
-export type ZoneSource = "aero" | "urbano" | "infra" | "servais" | "fixture" | "pansa" | "anscr" | "dipul" | "geopf" | "dronezoner" | "foca" | "anac" | "austro" | "lfv" | "iaa" | "lgs";
+export type ZoneSource = "aero" | "urbano" | "infra" | "servais" | "fixture" | "pansa" | "anscr" | "dipul" | "geopf" | "dronezoner" | "foca" | "anac" | "austro" | "lfv" | "iaa" | "lgs" | "anslt" | "eans" | "nsat" | "caasi";
 export interface ScheduleEntry {
     day: string[];
     startTime?: string;

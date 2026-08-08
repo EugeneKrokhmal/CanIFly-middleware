@@ -81,6 +81,26 @@ function isLatviaZone(zone: MatchedZone): boolean {
   return c === "LV" || c === "LVA" || zone.source === "lgs";
 }
 
+function isLithuaniaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "LT" || c === "LTU" || zone.source === "anslt";
+}
+
+function isEstoniaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "EE" || c === "EST" || zone.source === "eans";
+}
+
+function isSlovakiaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "SK" || c === "SVK" || zone.source === "nsat";
+}
+
+function isSloveniaZone(zone: MatchedZone): boolean {
+  const c = (zone.country ?? "").toUpperCase();
+  return c === "SI" || c === "SVN" || zone.source === "caasi";
+}
+
 function restrictionRank(restriction: UasRestriction): number {
   const r = String(restriction).toUpperCase();
   if (r === "PROHIBITED") return 100;
@@ -288,6 +308,51 @@ export function isHardNoFlyZone(zone: MatchedZone): boolean {
       );
     }
     return false;
+  }
+  if (isLithuaniaZone(zone) || isEstoniaZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const reasons = zoneReasons(zone).map((r) => r.toUpperCase());
+    if (
+      reasons.some(
+        (r) =>
+          r === "AIR_TRAFFIC" ||
+          r === "AIR TRAFFIC" ||
+          r.includes("MILITARY") ||
+          r.includes("SECURITY"),
+      )
+    ) {
+      const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+      return (
+        blob.includes("CTR") ||
+        blob.includes("ATZ") ||
+        blob.includes("AIRPORT") ||
+        blob.includes("EYVI") ||
+        blob.includes("EYKA") ||
+        blob.includes("EETN") ||
+        blob.includes("EETU")
+      );
+    }
+    return false;
+  }
+  if (isSlovakiaZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const blob = `${zone.name} ${zone.identifier}`.toUpperCase();
+    return (
+      blob.includes("CTR") ||
+      blob.includes("ZAKAZ") ||
+      blob.includes("ZAKÁZ") ||
+      blob.startsWith("PUAS")
+    );
+  }
+  if (isSloveniaZone(zone)) {
+    if (String(zone.restriction).toUpperCase() === "PROHIBITED") return true;
+    const blob = `${zone.name} ${zone.identifier} ${zone.message ?? ""}`.toUpperCase();
+    return (
+      blob.includes("PREPOVED") ||
+      blob.includes("PROHIBIT") ||
+      blob.includes("AIRPORT") ||
+      blob.includes("LJUBLJANA")
+    );
   }
   return false;
 }
